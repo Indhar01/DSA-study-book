@@ -1,0 +1,878 @@
+<!-- ============================================================
+     PART 2 DIVIDER
+     ============================================================ -->
+<div class="part-divider">
+  <span class="part-number">II</span>
+  <div class="part-title">Linear Data Structures</div>
+  <div class="part-desc">Chains, stacks, and queues — data that flows in one direction</div>
+</div>
+
+<!-- ============================================================
+     CHAPTER 5 — LINKED LISTS
+     ============================================================ -->
+<section id="ch5" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 2 — Linear Data Structures</div>
+  <div class="chapter-number">05</div>
+  <h1 class="chapter-title">Linked Lists</h1>
+  <p class="chapter-intro">Arrays store elements in contiguous memory slots, like seats in a row. Linked lists take a completely different approach — each element lives wherever it fits in memory, but carries a note pointing to the next element. Understanding this difference unlocks a new class of problems.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Treasure Hunt Analogy</h2>
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Imagine a treasure hunt where the first clue is at the starting location. When you open it, it tells you where to find the second clue. The second clue tells you the location of the third, and so on. Each clue only knows about the next clue — not all of them at once. That is a linked list. The starting location is the <strong>head</strong>. Each clue is a <strong>node</strong>. The final clue says "you've reached the end" — that is <strong>None</strong>.</p>
+</div>
+
+<h2>Singly Linked List Implementation</h2>
+<div class="code-wrapper">
+  <div class="code-label">Python — Node and LinkedList <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">class</span> <span class="fn">ListNode</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, val: <span class="bi">int</span> = <span class="nu">0</span>, next=<span class="kw">None</span>):
+        self.val  = val   <span class="cm"># the data stored in this node</span>
+        self.next = next  <span class="cm"># pointer to the next node (or None)</span>
+
+<span class="cm"># Helper to build a linked list from a Python list</span>
+<span class="kw">def</span> <span class="fn">build_list</span>(values: <span class="bi">list</span>[<span class="bi">int</span>]) -> ListNode:
+    dummy = ListNode(<span class="nu">0</span>)
+    cur = dummy
+    <span class="kw">for</span> v <span class="kw">in</span> values:
+        cur.next = ListNode(v)
+        cur = cur.next
+    <span class="kw">return</span> dummy.next
+
+<span class="cm"># Helper to convert a linked list back to a Python list (for testing)</span>
+<span class="kw">def</span> <span class="fn">list_to_array</span>(head: ListNode) -> <span class="bi">list</span>[<span class="bi">int</span>]:
+    result = []
+    <span class="kw">while</span> head:
+        result.append(head.val)
+        head = head.next
+    <span class="kw">return</span> result</code></pre>
+</div>
+
+<p>Visually, a linked list <code>1 → 2 → 3 → None</code> looks like this in memory:</p>
+<div class="code-wrapper">
+  <div class="code-label">ASCII Diagram <button class="copy-btn">Copy</button></div>
+  <pre><code>head
+ ↓
+[val:1 | next:●]──→[val:2 | next:●]──→[val:3 | next:None]
+</code></pre>
+</div>
+
+<h2>Why Not Just Use Arrays?</h2>
+<p>Linked lists shine where arrays struggle:</p>
+<ul>
+  <li><strong>O(1) insert/delete at the head</strong> (or any known position) — no shifting required.</li>
+  <li><strong>Dynamic sizing</strong> — no pre-allocation needed.</li>
+</ul>
+<p>Their weaknesses: no random access (you must traverse from the head), and extra memory for the pointer in each node.</p>
+
+<h2>The Fast and Slow Pointer (Runner) Technique</h2>
+<p>This clever technique uses two pointers that move through the list at different speeds — the "slow" pointer moves one step at a time, the "fast" pointer moves two. It solves cycle detection, finding the middle element, and more — all in O(n) with O(1) space.</p>
+
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy — Floyd's Tortoise and Hare</div>
+  <p>Imagine a circular racetrack. A tortoise moves at 1 step per second. A hare moves at 2. If the track is a loop, the hare will eventually lap the tortoise and they will meet. If there is no loop, the hare will reach the end (None) without ever catching the tortoise. This is the intuition behind Floyd's cycle detection algorithm.</p>
+</div>
+
+<!-- PROBLEM 5.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 5.1 — Reverse a Linked List</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the head of a singly linked list, reverse the list and return the new head.</p>
+      <p><strong>Example:</strong> <code>1→2→3→4→5</code> → <code>5→4→3→2→1</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Walk through the list one node at a time. For each node, flip its <code>next</code> pointer to point backward instead of forward. We need three pointers: <code>prev</code> (what came before), <code>curr</code> (where we are), and <code>nxt</code> (what comes next — saved before we overwrite).</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">reverse_list</span>(head: ListNode) -> ListNode:
+    prev = <span class="kw">None</span>
+    curr = head
+    <span class="kw">while</span> curr:
+        nxt        = curr.next  <span class="cm"># save next before overwriting</span>
+        curr.next  = prev       <span class="cm"># reverse the pointer</span>
+        prev       = curr       <span class="cm"># advance prev</span>
+        curr       = nxt        <span class="cm"># advance curr</span>
+    <span class="kw">return</span> prev  <span class="cm"># prev is the new head</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Dry Run</div>
+      <div class="dry-run"><pre>
+List: 1→2→3→None
+
+Start: prev=None, curr=1
+
+Step 1: nxt=2, curr.next=None, prev=1, curr=2
+  None←1  2→3→None
+
+Step 2: nxt=3, curr.next=1, prev=2, curr=3
+  None←1←2  3→None
+
+Step 3: nxt=None, curr.next=2, prev=3, curr=None
+  None←1←2←3
+
+Return prev = 3 (new head) ✓
+</pre></div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — One pass through all n nodes. <strong>Space: O(1)</strong> — Three pointer variables.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Linked list problems are pointer manipulation problems. Draw the state of the pointers before and after each step. The "save next before overwriting" pattern is fundamental to in-place list operations.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 5.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 5.2 — Merge Two Sorted Lists</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Merge two sorted linked lists and return the merged list (also sorted).</p>
+      <p><strong>Example:</strong> <code>1→2→4</code> and <code>1→3→4</code> → <code>1→1→2→3→4→4</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a dummy head node to simplify edge cases. Maintain a pointer to the tail of the merged list. At each step, compare the heads of both lists, attach the smaller one to the tail, and advance that list's pointer. When one list runs out, attach the rest of the other.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">merge_two_lists</span>(l1: ListNode, l2: ListNode) -> ListNode:
+    dummy = ListNode(<span class="nu">0</span>)   <span class="cm"># sentinel node to avoid special-casing the head</span>
+    tail  = dummy
+
+    <span class="kw">while</span> l1 <span class="kw">and</span> l2:
+        <span class="kw">if</span> l1.val <= l2.val:
+            tail.next = l1
+            l1 = l1.next
+        <span class="kw">else</span>:
+            tail.next = l2
+            l2 = l2.next
+        tail = tail.next   <span class="cm"># advance the tail</span>
+
+    tail.next = l1 <span class="kw">if</span> l1 <span class="kw">else</span> l2  <span class="cm"># attach whichever list remains</span>
+    <span class="kw">return</span> dummy.next               <span class="cm"># skip the dummy, return real head</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n + m)</strong> where n and m are the lengths of the two lists. <strong>Space: O(1)</strong> — no new nodes created, just re-wiring existing ones.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The <strong>dummy head</strong> pattern is a recurring technique. It eliminates the need to handle the "empty output" edge case separately, because the dummy is always there as the initial node.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 5.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 5.3 — Linked List Cycle Detection</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the head of a linked list, return <code>True</code> if there is a cycle in the list.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use Floyd's fast-and-slow pointer algorithm. If there is a cycle, the fast pointer will eventually "lap" the slow pointer and they will meet at the same node. If there is no cycle, the fast pointer will reach <code>None</code>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">has_cycle</span>(head: ListNode) -> <span class="bi">bool</span>:
+    slow = head
+    fast = head
+    <span class="kw">while</span> fast <span class="kw">and</span> fast.next:
+        slow = slow.next        <span class="cm"># tortoise: 1 step</span>
+        fast = fast.next.next   <span class="cm"># hare: 2 steps</span>
+        <span class="kw">if</span> slow == fast:        <span class="cm"># they met → cycle exists</span>
+            <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">return</span> <span class="kw">False</span>  <span class="cm"># fast hit None → no cycle</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — At most n iterations. <strong>Space: O(1)</strong> — Only two pointers.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 5.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 5.4 — Remove Nth Node From End</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the head of a linked list, remove the <code>n</code>th node from the end and return the head. Do it in one pass.</p>
+      <p><strong>Example:</strong> List = <code>1→2→3→4→5</code>, n=2 → <code>1→2→3→5</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use two pointers with a gap of n between them. Advance both pointers together until the fast pointer reaches the end. At that point, the slow pointer is exactly at the node before the one to remove. This is a brilliant one-pass trick using the fixed-gap idea.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">remove_nth_from_end</span>(head: ListNode, n: <span class="bi">int</span>) -> ListNode:
+    dummy = ListNode(<span class="nu">0</span>, head)
+    fast = dummy
+    slow = dummy
+
+    <span class="cm"># Advance fast n+1 steps to create a gap of n</span>
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="bi">range</span>(n + <span class="nu">1</span>):
+        fast = fast.next
+
+    <span class="cm"># Move both until fast reaches the end</span>
+    <span class="kw">while</span> fast:
+        fast = fast.next
+        slow = slow.next
+
+    <span class="cm"># slow.next is the node to remove</span>
+    slow.next = slow.next.next
+    <span class="kw">return</span> dummy.next</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — One pass. <strong>Space: O(1)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>A fixed gap between two pointers is a powerful one-pass technique. Think: "if the fast pointer is n steps ahead, when it reaches the end, where is the slow pointer?"</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 5.5 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 5.5 — Reorder List</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given list <code>L0→L1→...→Ln-1→Ln</code>, reorder it to <code>L0→Ln→L1→Ln-1→L2→Ln-2→...</code> in-place.</p>
+      <p><strong>Example:</strong> <code>1→2→3→4</code> → <code>1→4→2→3</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>This combines three sub-problems: (1) find the middle using fast/slow pointers, (2) reverse the second half, (3) merge the two halves by interleaving.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">reorder_list</span>(head: ListNode) -> <span class="kw">None</span>:
+    <span class="kw">if</span> <span class="kw">not</span> head: <span class="kw">return</span>
+
+    <span class="cm"># Step 1: find the middle</span>
+    slow, fast = head, head
+    <span class="kw">while</span> fast <span class="kw">and</span> fast.next:
+        slow = slow.next
+        fast = fast.next.next
+
+    <span class="cm"># Step 2: reverse second half</span>
+    prev, curr = <span class="kw">None</span>, slow.next
+    slow.next = <span class="kw">None</span>  <span class="cm"># cut the list in half</span>
+    <span class="kw">while</span> curr:
+        nxt = curr.next; curr.next = prev; prev = curr; curr = nxt
+
+    <span class="cm"># Step 3: merge first and reversed second half</span>
+    first, second = head, prev
+    <span class="kw">while</span> second:
+        tmp1, tmp2    = first.next, second.next
+        first.next    = second
+        second.next   = tmp1
+        first, second = tmp1, tmp2</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Three O(n) passes. <strong>Space: O(1)</strong> — All in-place.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Complex linked list problems often decompose into simpler sub-operations (find-middle, reverse, merge) that you already know. Learn those building blocks and combine them.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout callout-mistake">
+  <div class="callout-title">🔴 Common Beginner Mistake</div>
+  <p>Forgetting to save <code>curr.next</code> before overwriting <code>curr.next</code> is the most common linked list bug. Always save the next pointer in a temporary variable <em>before</em> any assignment that changes it. Draw the pointers on paper if you are getting confused.</p>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A linked list is a chain of nodes, each storing a value and a pointer to the next node.</li>
+    <li>O(1) head insert/delete; O(n) access by position.</li>
+    <li>The <strong>dummy head</strong> pattern simplifies edge cases by providing a stable starting node.</li>
+    <li><strong>Fast/slow pointers</strong> detect cycles, find midpoints, and maintain fixed gaps in O(n) time and O(1) space.</li>
+    <li>Complex operations often decompose into: find middle → reverse a half → merge.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 5.1 (Beginner)</strong>
+      <p>Write a function to find the middle node of a linked list. If the list has even length, return the second middle. Use the fast/slow pointer technique.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 5.2 (Intermediate)</strong>
+      <p>Implement a function that checks whether a linked list is a palindrome. Do it in O(n) time and O(1) extra space. Hint: find the middle, reverse the second half, compare, then restore.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 5.3 (Advanced)</strong>
+      <p>Given the head of a linked list where each node also has a <code>random</code> pointer that can point to any node or None, create a deep copy of the list. All node values, <code>next</code> pointers, and <code>random</code> pointers in the copy must reflect the original structure. Solve it in O(n) time and O(1) extra space using an interleaving trick.</p>
+    </div>
+  </div>
+</div>
+
+</div></section>
+
+<!-- ============================================================
+     CHAPTER 6 — STACKS
+     ============================================================ -->
+<section id="ch6" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 2 — Linear Data Structures</div>
+  <div class="chapter-number">06</div>
+  <h1 class="chapter-title">Stacks</h1>
+  <p class="chapter-intro">The stack is one of the simplest and most useful data structures in computer science. Its beauty lies in its constraint: you can only ever interact with the top element. This restriction, far from being a limitation, turns out to be exactly the right model for a surprising number of real-world problems.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Plate Stack Analogy</h2>
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Imagine a stack of plates in a cafeteria. You can only place a new plate on top, and you can only pick up the plate on top. You cannot grab a plate from the middle without moving everything above it. This "last in, first out" (LIFO) behaviour is the defining property of a stack. The most recently added item is always the first to be removed.</p>
+</div>
+
+<p>In Python, we use a regular <code>list</code> as a stack: <code>append()</code> pushes onto the top, and <code>pop()</code> removes from the top. Both operations are O(1) amortised.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Stack Basics <button class="copy-btn">Copy</button></div>
+  <pre><code>stack = []
+stack.append(<span class="nu">1</span>)   <span class="cm"># push 1 → [1]</span>
+stack.append(<span class="nu">2</span>)   <span class="cm"># push 2 → [1, 2]</span>
+stack.append(<span class="nu">3</span>)   <span class="cm"># push 3 → [1, 2, 3]</span>
+top = stack[-<span class="nu">1</span>]   <span class="cm"># peek at top: 3 (no removal)</span>
+val = stack.pop()  <span class="cm"># pop: returns 3, stack → [1, 2]</span></code></pre>
+</div>
+
+<h2>The Monotonic Stack Pattern</h2>
+<p>A monotonic stack is a stack that maintains its elements in sorted order (either always increasing or always decreasing from bottom to top). As you process elements, you pop items from the stack that would violate the monotonic property before pushing the new element. This pattern solves "next greater element" and "previous smaller element" problems in O(n) — far better than the naive O(n²) approach.</p>
+
+<!-- PROBLEM 6.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 6.1 — Valid Parentheses</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a string containing only <code>(</code>, <code>)</code>, <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, determine if the input is valid. Open brackets must be closed by the same type of bracket, in the correct order.</p>
+      <p><strong>Example:</strong> <code>"()[]{}"</code> → <code>True</code>; <code>"(]"</code> → <code>False</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a stack. Push every opening bracket. When you encounter a closing bracket, check if the top of the stack is its matching opening bracket. If it is, pop and continue. If not, the string is invalid. At the end, the stack must be empty.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">is_valid</span>(s: <span class="bi">str</span>) -> <span class="bi">bool</span>:
+    stack = []
+    mapping = {<span class="st">')'</span>: <span class="st">'('</span>, <span class="st">'}'</span>: <span class="st">'{'</span>, <span class="st">']'</span>: <span class="st">'['</span>}
+    <span class="kw">for</span> char <span class="kw">in</span> s:
+        <span class="kw">if</span> char <span class="kw">in</span> mapping:          <span class="cm"># it's a closing bracket</span>
+            top = stack.pop() <span class="kw">if</span> stack <span class="kw">else</span> <span class="st">'#'</span>
+            <span class="kw">if</span> mapping[char] != top:  <span class="cm"># mismatch</span>
+                <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">else</span>:
+            stack.append(char)        <span class="cm"># opening bracket: push it</span>
+    <span class="kw">return</span> <span class="kw">not</span> stack               <span class="cm"># valid only if nothing unmatched remains</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(n)</strong> — worst case stack holds all opening brackets.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Whenever a problem involves "matching" or "nesting" (brackets, HTML tags, function calls), think of a stack. The LIFO property naturally handles the innermost-first nesting.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 6.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 6.2 — Min Stack</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Design a stack that supports push, pop, top, and retrieving the minimum element in O(1) time.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use two stacks: one for the actual values, and one that tracks the current minimum at each level. When we push a new value, we also push the new minimum (the smaller of the new value and the current top of the min stack). When we pop, we pop from both stacks simultaneously.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">class</span> <span class="fn">MinStack</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.stack     = []   <span class="cm"># regular stack</span>
+        self.min_stack = []   <span class="cm"># tracks min at each level</span>
+
+    <span class="kw">def</span> <span class="fn">push</span>(self, val: <span class="bi">int</span>) -> <span class="kw">None</span>:
+        self.stack.append(val)
+        cur_min = <span class="bi">min</span>(val, self.min_stack[-<span class="nu">1</span>] <span class="kw">if</span> self.min_stack <span class="kw">else</span> val)
+        self.min_stack.append(cur_min)
+
+    <span class="kw">def</span> <span class="fn">pop</span>(self) -> <span class="kw">None</span>:
+        self.stack.pop()
+        self.min_stack.pop()
+
+    <span class="kw">def</span> <span class="fn">top</span>(self) -> <span class="bi">int</span>:
+        <span class="kw">return</span> self.stack[-<span class="nu">1</span>]
+
+    <span class="kw">def</span> <span class="fn">get_min</span>(self) -> <span class="bi">int</span>:
+        <span class="kw">return</span> self.min_stack[-<span class="nu">1</span>]</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>All operations: O(1)</strong>. <strong>Space: O(n)</strong> — two stacks, each up to n elements.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 6.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 6.3 — Daily Temperatures</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a list of daily temperatures, for each day, find how many days until a warmer temperature. If no warmer day exists, use 0.</p>
+      <p><strong>Example:</strong> <code>[73,74,75,71,69,72,76,73]</code> → <code>[1,1,4,2,1,1,0,0]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a monotonic stack of indices. Push indices onto the stack. Whenever the current temperature is warmer than the temperature at the index on the stack's top, that top index has found its answer. Pop it and record the difference in indices.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">daily_temperatures</span>(temps: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">list</span>[<span class="bi">int</span>]:
+    result = [<span class="nu">0</span>] * <span class="bi">len</span>(temps)
+    stack  = []  <span class="cm"># monotonic decreasing stack of indices</span>
+
+    <span class="kw">for</span> i, temp <span class="kw">in</span> <span class="bi">enumerate</span>(temps):
+        <span class="cm"># While current temp is greater than temp at stack top:</span>
+        <span class="kw">while</span> stack <span class="kw">and</span> temp > temps[stack[-<span class="nu">1</span>]]:
+            idx = stack.pop()
+            result[idx] = i - idx  <span class="cm"># days until warmer</span>
+        stack.append(i)
+
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Each index is pushed and popped at most once. <strong>Space: O(n)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The monotonic stack answers "next greater element" queries in O(n). Store indices (not values) on the stack so you can compute distances.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 6.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 6.4 — Largest Rectangle in Histogram</span>
+    <span class="badge badge-advanced">Advanced</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array of heights representing a histogram, find the area of the largest rectangle that fits under it.</p>
+      <p><strong>Example:</strong> <code>[2,1,5,6,2,3]</code> → <code>10</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>For each bar, the largest rectangle using that bar as its limiting height extends left and right as far as possible without hitting a shorter bar. We use a monotonic increasing stack: when we encounter a bar shorter than the top of the stack, the top bar can no longer extend right. Pop it and compute its maximum area using the remaining stack top to determine its left boundary.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">largest_rectangle</span>(heights: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    stack  = []   <span class="cm"># monotonic increasing stack of (index, height)</span>
+    best   = <span class="nu">0</span>
+    heights.append(<span class="nu">0</span>)  <span class="cm"># sentinel: force all bars to be popped at the end</span>
+
+    <span class="kw">for</span> i, h <span class="kw">in</span> <span class="bi">enumerate</span>(heights):
+        start = i
+        <span class="kw">while</span> stack <span class="kw">and</span> stack[-<span class="nu">1</span>][<span class="nu">1</span>] > h:
+            idx, height = stack.pop()
+            best  = <span class="bi">max</span>(best, height * (i - idx))
+            start = idx   <span class="cm"># can extend left to where the popped bar started</span>
+        stack.append((start, h))
+
+    heights.pop()   <span class="cm"># restore original array</span>
+    <span class="kw">return</span> best</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Each bar is pushed and popped once. <strong>Space: O(n)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The sentinel (appending 0) is a clean trick to force all remaining stack elements to be processed at the end of the loop without extra post-loop code.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A stack is LIFO — last in, first out. In Python, use a <code>list</code> with <code>append()</code> and <code>pop()</code>.</li>
+    <li>Use stacks for <strong>matching/nesting</strong> problems (parentheses, HTML tags).</li>
+    <li>The <strong>monotonic stack</strong> answers "next greater/smaller element" queries in O(n).</li>
+    <li>The <strong>dual-stack</strong> pattern (Min Stack) lets you augment a stack with constant-time additional queries.</li>
+    <li>A <strong>sentinel value</strong> can simplify the handling of edge cases at array boundaries.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 6.1 (Beginner)</strong>
+      <p>Implement a function <code>evaluate_rpn(tokens)</code> that evaluates a mathematical expression in Reverse Polish Notation. For example, <code>["2","1","+","3","*"]</code> should return 9, because (2+1)*3=9. Use a stack.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 6.2 (Intermediate)</strong>
+      <p>Given an array of integers, find the "next greater element" for each element. For each index i, return the first element to the right of i that is greater than nums[i], or -1 if none exists. Solve with a monotonic stack in O(n).</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 6.3 (Advanced)</strong>
+      <p>Given a string containing digits and the operations +, -, *, /, implement a basic calculator that handles operator precedence correctly. For example, <code>"3+2*2"</code> should return 7. Use a stack to handle the precedence without parentheses.</p>
+    </div>
+  </div>
+</div>
+</div></section>
+
+<!-- ============================================================
+     CHAPTER 7 — QUEUES AND DEQUES
+     ============================================================ -->
+<section id="ch7" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 2 — Linear Data Structures</div>
+  <div class="chapter-number">07</div>
+  <h1 class="chapter-title">Queues and Deques</h1>
+  <p class="chapter-intro">If a stack is a pile of plates, a queue is a line of people waiting at a ticket counter. The first person to arrive is the first to be served. This simple principle — first in, first out — is the backbone of level-order traversal, shortest path algorithms, and more.</p>
+</div>
+<div class="chapter-body">
+
+<h2>Queue: First In, First Out (FIFO)</h2>
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Imagine people lining up to buy concert tickets. The first person who arrived waits at the front. New arrivals join at the back. When a ticket window opens, the person at the front is served. No cutting in line! This is FIFO. In computing, queues are used for task scheduling, print spoolers, BFS graph traversal, and any scenario where fairness of processing order matters.</p>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Queue Using collections.deque <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+queue = deque()
+queue.append(<span class="nu">1</span>)       <span class="cm"># enqueue: add to right end</span>
+queue.append(<span class="nu">2</span>)       <span class="cm"># [1, 2]</span>
+queue.append(<span class="nu">3</span>)       <span class="cm"># [1, 2, 3]</span>
+front = queue[<span class="nu">0</span>]     <span class="cm"># peek front: 1</span>
+val   = queue.popleft() <span class="cm"># dequeue: remove from left end → 1, queue=[2,3]</span></code></pre>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 Why Not Use a Regular List for Queues?</div>
+  <p>Python's <code>list.pop(0)</code> removes the first element but has to shift every remaining element one position to the left — that is O(n). A <code>collections.deque</code> uses a doubly-linked internal structure so <code>popleft()</code> is O(1). Always use <code>deque</code> for queues.</p>
+</div>
+
+<h2>Deque: Double-Ended Queue</h2>
+<p>A <strong>deque</strong> (pronounced "deck") allows O(1) add and remove from <em>both</em> ends. This makes it a generalisation of both stacks and queues, and it is particularly powerful for the "sliding window maximum" problem.</p>
+
+<!-- PROBLEM 7.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 7.1 — Number of Islands (BFS Version)</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a 2D grid of <code>'1'</code> (land) and <code>'0'</code> (water), count the number of islands. An island is surrounded by water and formed by connecting adjacent land cells horizontally or vertically.</p>
+      <p><strong>Example:</strong> Grid with two clusters of 1s → Output: <code>2</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Think of it as a flood-fill. When you discover a land cell, use BFS to "flood" (mark as visited) all connected land cells. Each time you start a new flood from an unvisited land cell, you have found a new island. Count how many floods you initiate.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">num_islands</span>(grid: <span class="bi">list</span>[<span class="bi">list</span>[<span class="bi">str</span>]]) -> <span class="bi">int</span>:
+    <span class="kw">if</span> <span class="kw">not</span> grid: <span class="kw">return</span> <span class="nu">0</span>
+    rows, cols = <span class="bi">len</span>(grid), <span class="bi">len</span>(grid[<span class="nu">0</span>])
+    count = <span class="nu">0</span>
+
+    <span class="kw">def</span> <span class="fn">bfs</span>(r, c):
+        queue = deque([(r, c)])
+        grid[r][c] = <span class="st">'0'</span>  <span class="cm"># mark visited immediately on enqueue</span>
+        <span class="kw">while</span> queue:
+            row, col = queue.popleft()
+            <span class="kw">for</span> dr, dc <span class="kw">in</span> [(<span class="nu">1</span>,<span class="nu">0</span>),(-<span class="nu">1</span>,<span class="nu">0</span>),(<span class="nu">0</span>,<span class="nu">1</span>),(<span class="nu">0</span>,-<span class="nu">1</span>)]:
+                nr, nc = row + dr, col + dc
+                <span class="kw">if</span> <span class="nu">0</span> <= nr < rows <span class="kw">and</span> <span class="nu">0</span> <= nc < cols <span class="kw">and</span> grid[nr][nc] == <span class="st">'1'</span>:
+                    grid[nr][nc] = <span class="st">'0'</span>
+                    queue.append((nr, nc))
+
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="bi">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="bi">range</span>(cols):
+            <span class="kw">if</span> grid[r][c] == <span class="st">'1'</span>:
+                bfs(r, c)
+                count += <span class="nu">1</span>
+    <span class="kw">return</span> count</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(m × n)</strong> — Each cell is visited at most once. <strong>Space: O(min(m, n))</strong> — Queue size is bounded by the perimeter of the BFS frontier.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>BFS uses a queue. It explores all neighbours at distance 1 before distance 2, making it ideal for shortest-path and connected-components problems on grids and graphs.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 7.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 7.2 — Sliding Window Maximum</span>
+    <span class="badge badge-advanced">Advanced</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array <code>nums</code> and window size <code>k</code>, return a list of the maximum value in each window of size k as it slides across the array.</p>
+      <p><strong>Example:</strong> <code>nums=[1,3,-1,-3,5,3,6,7], k=3</code> → <code>[3,3,5,5,6,7]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a monotonic deque that stores indices in decreasing order of their values. When we slide the window: (1) remove indices from the front that are outside the window; (2) remove indices from the back whose values are smaller than the current value (they can never be the maximum while the current element is in the window). The front of the deque always holds the maximum.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">max_sliding_window</span>(nums: <span class="bi">list</span>[<span class="bi">int</span>], k: <span class="bi">int</span>) -> <span class="bi">list</span>[<span class="bi">int</span>]:
+    dq     = deque()   <span class="cm"># stores indices, values are decreasing</span>
+    result = []
+
+    <span class="kw">for</span> i, num <span class="kw">in</span> <span class="bi">enumerate</span>(nums):
+        <span class="cm"># Remove elements outside the window from the front</span>
+        <span class="kw">while</span> dq <span class="kw">and</span> dq[<span class="nu">0</span>] < i - k + <span class="nu">1</span>:
+            dq.popleft()
+        <span class="cm"># Remove smaller elements from the back (they'll never be max)</span>
+        <span class="kw">while</span> dq <span class="kw">and</span> nums[dq[-<span class="nu">1</span>]] < num:
+            dq.pop()
+        dq.append(i)
+        <span class="cm"># The front of deque is the max of the current window</span>
+        <span class="kw">if</span> i >= k - <span class="nu">1</span>:
+            result.append(nums[dq[<span class="nu">0</span>]])
+
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Each element is added and removed from the deque at most once. <strong>Space: O(k)</strong> — The deque holds at most k indices.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The deque (double-ended queue) is the perfect tool for sliding window problems that need to efficiently track the maximum or minimum within a window as it moves.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 7.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 7.3 — Binary Tree Level Order Traversal</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the root of a binary tree, return the level-order traversal of its nodes' values as a list of lists (one list per level).</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a queue. Start with the root. Process all nodes at level 0, then level 1, etc. The trick for separating levels: at the start of each level, record how many nodes are currently in the queue — that is exactly how many nodes belong to this level.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">level_order</span>(root) -> <span class="bi">list</span>[<span class="bi">list</span>[<span class="bi">int</span>]]:
+    <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+    result = []
+    queue  = deque([root])
+
+    <span class="kw">while</span> queue:
+        level_size = <span class="bi">len</span>(queue)   <span class="cm"># nodes in the current level</span>
+        level = []
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="bi">range</span>(level_size):
+            node = queue.popleft()
+            level.append(node.val)
+            <span class="kw">if</span> node.left:  queue.append(node.left)
+            <span class="kw">if</span> node.right: queue.append(node.right)
+        result.append(level)
+
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Visit each node once. <strong>Space: O(n)</strong> — Last level can have n/2 nodes in the queue.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 7.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 7.4 — First Non-Repeating Character in a Stream</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a stream of characters, at each step, find the first non-repeating character. Return <code>'#'</code> if none exists.</p>
+      <p><strong>Example:</strong> Stream <code>"aabcde"</code> → at each step: <code>['a','#','b','b','b','c']</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Maintain a queue of characters seen in order, and a frequency map. When asked for the first non-repeating character, drain the front of the queue until you find a character with frequency 1.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque, defaultdict
+
+<span class="kw">def</span> <span class="fn">first_non_repeating_stream</span>(stream: <span class="bi">str</span>) -> <span class="bi">list</span>[<span class="bi">str</span>]:
+    freq  = defaultdict(<span class="bi">int</span>)
+    queue = deque()
+    result = []
+
+    <span class="kw">for</span> ch <span class="kw">in</span> stream:
+        freq[ch] += <span class="nu">1</span>
+        queue.append(ch)
+        <span class="cm"># Remove repeated characters from the front</span>
+        <span class="kw">while</span> queue <span class="kw">and</span> freq[queue[<span class="nu">0</span>]] > <span class="nu">1</span>:
+            queue.popleft()
+        result.append(queue[<span class="nu">0</span>] <span class="kw">if</span> queue <span class="kw">else</span> <span class="st">'#'</span>)
+
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> overall. <strong>Space: O(1)</strong> — At most 26 characters in the queue (English alphabet).</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A queue is FIFO — first in, first out. In Python, always use <code>collections.deque</code>, not a list.</li>
+    <li>A <strong>deque</strong> supports O(1) add/remove at both ends — the foundation of the sliding window maximum pattern.</li>
+    <li><strong>BFS uses a queue</strong>. The level-separation trick (snapshot queue size at start of level) is fundamental for level-order tree traversal.</li>
+    <li>Monotonic deques (decreasing) efficiently track window maximums as a window slides.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 7.1 (Beginner)</strong>
+      <p>Implement a queue using only two stacks. <code>push</code> should be O(1) and <code>pop</code> amortised O(1). How does this work? Hint: one stack is the "inbox," the other is the "outbox."</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 7.2 (Intermediate)</strong>
+      <p>Given a binary tree, return the right side view — the value of the last node at each level when viewed from the right side. Use BFS with the level-separation trick.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 7.3 (Advanced)</strong>
+      <p>Given a grid of cells where some are blocked (1) and some are open (0), find the shortest path from the top-left to the bottom-right corner. Use BFS to guarantee the shortest path. What is the time complexity? What is the space complexity?</p>
+    </div>
+  </div>
+</div>
+</div></section>

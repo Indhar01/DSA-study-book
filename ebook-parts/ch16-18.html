@@ -1,0 +1,612 @@
+<!-- ============================================================
+     PART 5 DIVIDER
+     ============================================================ -->
+<div class="part-divider">
+  <span class="part-number">V</span>
+  <div class="part-title">Interview Preparation</div>
+  <div class="part-desc">Frameworks, patterns, and the mindset that turns knowledge into offers</div>
+</div>
+
+<!-- ============================================================
+     CHAPTER 16 — PROBLEM-SOLVING FRAMEWORK
+     ============================================================ -->
+<section id="ch16" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 5 — Interview Preparation</div>
+  <div class="chapter-number">16</div>
+  <h1 class="chapter-title">The Problem-Solving Framework</h1>
+  <p class="chapter-intro">Technical knowledge is necessary but not sufficient. A candidate who knows every data structure but freezes under pressure, or who jumps straight to code without thinking, will still fail. This chapter gives you a repeatable framework for any technical interview — from understanding the problem to delivering a clean, communicated solution.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The UMPIRE Method</h2>
+<p>UMPIRE is a six-step framework that guides you from a blank problem statement to a working, optimised solution while keeping the interviewer engaged at every step.</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Letter</th><th>Step</th><th>What You Do</th></tr></thead>
+  <tbody>
+    <tr><td><strong>U</strong></td><td>Understand</td><td>Restate the problem in your own words. Ask clarifying questions. Identify input/output types, constraints, edge cases.</td></tr>
+    <tr><td><strong>M</strong></td><td>Match</td><td>Which pattern does this look like? Array? Tree? Graph? DP? Look for known templates.</td></tr>
+    <tr><td><strong>P</strong></td><td>Plan</td><td>Explain your approach before writing a single line of code. Walk through an example. State the expected complexity.</td></tr>
+    <tr><td><strong>I</strong></td><td>Implement</td><td>Code cleanly. Use meaningful variable names. Add short inline comments at decision points.</td></tr>
+    <tr><td><strong>R</strong></td><td>Review</td><td>Trace through your code manually with a small example. Verify it handles edge cases.</td></tr>
+    <tr><td><strong>E</strong></td><td>Evaluate</td><td>State the time and space complexity aloud. Discuss trade-offs. Offer to optimise if time allows.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>UMPIRE Worked Example: Two Sum</h2>
+<p>Let us walk through UMPIRE on a simple problem to internalise the method.</p>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 U — Understand</div>
+  <p>"So, given an array of integers and a target, I need to return the two indices that add up to the target. There is exactly one valid answer, and I should not use the same element twice. Can the array contain negative numbers? Can it be empty?" (Interviewer answers yes and no.) "OK, and the return type is a list of two integers."</p>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 M — Match</div>
+  <p>"This feels like a hash map problem. For each element, I need to quickly find if its complement exists. A hash map gives me O(1) lookup, which is exactly what I need."</p>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 P — Plan</div>
+  <p>"I will iterate through the array. For each element <code>x</code>, I compute <code>complement = target - x</code>. If the complement is in my map, I return both indices. Otherwise, I store <code>x → index</code> in the map. This runs in O(n) time and O(n) space."</p>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 I — Implement</div>
+  <p>Code the solution as shown in Chapter 4, Problem 4.1.</p>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 R — Review</div>
+  <p>"Let me trace through [2,7,11,15] with target 9. i=0: x=2, complement=7, not in map, store {2:0}. i=1: x=7, complement=2, 2 IS in map at index 0. Return [0,1]. ✓"</p>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 E — Evaluate</div>
+  <p>"Time complexity is O(n) — one pass, each lookup is O(1). Space complexity is O(n) — the map can hold at most n entries. Could we do it in O(1) space? Only if the array were sorted — then two pointers would work. But the problem doesn't guarantee sorted order."</p>
+</div>
+
+<h2>How to Communicate Complexity</h2>
+<p>Interviewers listen carefully to how you express complexity. Here is the script that conveys confidence:</p>
+
+<div class="callout callout-tip">
+  <div class="callout-title">🟢 Complexity Communication Script</div>
+  <p><strong>Time:</strong> "The outer loop runs n times. Inside, each operation is O(1) amortised — hash map lookup and insert. So the total time complexity is O(n)."<br><br>
+  <strong>Space:</strong> "I am using a hash map that can grow to at most n entries in the worst case, so the space complexity is O(n). The output array does not count towards auxiliary space."<br><br>
+  <strong>Trade-off:</strong> "If I needed O(1) space, I could sort the array first in O(n log n) and then use two pointers in O(n), but that changes the time complexity."</p>
+</div>
+
+<h2>Common Interview Mistakes and How to Fix Them</h2>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Mistake</th><th>What the Interviewer Thinks</th><th>How to Fix It</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Jumping straight to code without planning</td>
+      <td>"Does not think before acting. Will write buggy code."</td>
+      <td>Always explain your approach and trace a small example before typing.</td>
+    </tr>
+    <tr>
+      <td>Staying silent while thinking</td>
+      <td>"Is stuck. Has no strategy."</td>
+      <td>Think out loud: "OK, first thought is brute force O(n²)… but if I use a hash map…"</td>
+    </tr>
+    <tr>
+      <td>Not handling edge cases</td>
+      <td>"Inexperienced. Ships buggy code."</td>
+      <td>After your core solution, always ask: "What if the input is empty? What if n=1?"</td>
+    </tr>
+    <tr>
+      <td>Using bad variable names (i, j, x, y everywhere)</td>
+      <td>"Writes unreadable code."</td>
+      <td>Use meaningful names: <code>left, right, slow, fast, current_sum, min_price</code>.</td>
+    </tr>
+    <tr>
+      <td>Forgetting to state complexity</td>
+      <td>"Does not think about performance."</td>
+      <td>At the end of every solution, say: "Time is O(…), space is O(…)"</td>
+    </tr>
+    <tr>
+      <td>Getting stuck and going silent</td>
+      <td>"Cannot handle pressure."</td>
+      <td>Say "I am thinking through a brute-force approach first to ground myself" or ask: "Can I get a small hint on the intended data structure?"</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>The 6-Week Study Plan</h2>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Week</th><th>Focus</th><th>Chapters</th><th>Daily Goal</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Foundations</td><td>1, 2, 3, 4</td><td>1 chapter/day + 2 practice problems</td></tr>
+    <tr><td>2</td><td>Linear Structures</td><td>5, 6, 7</td><td>1–2 problems per section per day</td></tr>
+    <tr><td>3</td><td>Trees and Search</td><td>8, 9, 10, 13</td><td>2 problems/day; revisit traversals from memory</td></tr>
+    <tr><td>4</td><td>Graphs and Backtracking</td><td>11, 14</td><td>1 graph problem + 1 backtracking problem/day</td></tr>
+    <tr><td>5</td><td>Dynamic Programming</td><td>12, 15</td><td>2 DP problems/day from the template categories</td></tr>
+    <tr><td>6</td><td>Mock Interviews + Review</td><td>16, 17, 18</td><td>1 timed mock interview/day (45 min); review weak spots</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>The <strong>UMPIRE framework</strong>: Understand → Match → Plan → Implement → Review → Evaluate.</li>
+    <li>Always plan and trace an example <em>before</em> writing code.</li>
+    <li>Think out loud — silence during thinking is the most common interview mistake.</li>
+    <li>Always state time and space complexity before the interviewer has to ask.</li>
+    <li>Handle edge cases explicitly: empty input, single element, negative numbers.</li>
+  </ul>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 17 — PATTERN RECOGNITION GUIDE
+     ============================================================ -->
+<section id="ch17" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 5 — Interview Preparation</div>
+  <div class="chapter-number">17</div>
+  <h1 class="chapter-title">Pattern Recognition Guide</h1>
+  <p class="chapter-intro">The best interviewers are not looking for memorised solutions — they are looking for pattern recognition. This chapter maps common problem signals to the data structures and algorithms that solve them. Internalise these mappings and you will spend less time searching for a starting point and more time building the solution.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Pattern Decision Framework</h2>
+<p>When you read a problem, ask these questions in order:</p>
+
+<div class="code-wrapper">
+  <div class="code-label">ASCII — Pattern Decision Tree <button class="copy-btn">Copy</button></div>
+  <pre><code>Is the input sorted (or does sorting help)?
+  └─ Yes → Binary Search or Two Pointers
+
+Is the problem about a contiguous subarray/substring?
+  └─ Yes → Sliding Window
+
+Does it ask "have I seen X before" or "count occurrences"?
+  └─ Yes → Hash Map / Hash Set
+
+Is the data hierarchical with parent-child relationships?
+  └─ Yes → Tree (DFS or BFS)
+       └─ Sorted values needed? → BST
+       └─ Level-by-level processing? → BFS Queue
+
+Is the data a network of connections?
+  └─ Yes → Graph (DFS/BFS/Union-Find)
+
+Does it ask for "all combinations/permutations/subsets"?
+  └─ Yes → Backtracking
+
+Does it ask for min/max of something with overlapping subproblems?
+  └─ Yes → Dynamic Programming
+
+Does it ask for the "smallest k" or "largest k" or a running median?
+  └─ Yes → Heap (Priority Queue)
+
+Does it involve matching, nesting, or "next greater element"?
+  └─ Yes → Stack (monotonic stack for NGE)</code></pre>
+</div>
+
+<h2>Pattern Cards</h2>
+
+<div class="pattern-grid">
+  <div class="pattern-card">
+    <h4>Two Pointers</h4>
+    <p>Sorted array, pair/triplet sum, palindrome check, container with water.</p>
+    <p class="trigger"><strong>Triggers:</strong> "sorted array," "pair that sums to," "in-place on sorted"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Sliding Window</h4>
+    <p>Longest/shortest substring satisfying a constraint, max sum subarray of size k.</p>
+    <p class="trigger"><strong>Triggers:</strong> "contiguous subarray/substring," "window," "at most k distinct"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Hash Map / Set</h4>
+    <p>Two Sum, group anagrams, duplicate detection, frequency counting.</p>
+    <p class="trigger"><strong>Triggers:</strong> "find if X exists," "count occurrences," "first non-repeating"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Binary Search</h4>
+    <p>Search in sorted/rotated array, minimum in rotated, answer-space search.</p>
+    <p class="trigger"><strong>Triggers:</strong> "sorted array," "O(log n)," "minimum speed/capacity to achieve"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Tree DFS (Recursion)</h4>
+    <p>Max depth, path sum, validate BST, LCA, serialize/deserialize.</p>
+    <p class="trigger"><strong>Triggers:</strong> "tree," "recursive structure," "path from root to leaf"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Tree BFS (Queue)</h4>
+    <p>Level-order traversal, right side view, minimum depth, zigzag traversal.</p>
+    <p class="trigger"><strong>Triggers:</strong> "level by level," "minimum depth," "layer"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Graph DFS / BFS</h4>
+    <p>Number of islands, clone graph, detect cycle, connected components.</p>
+    <p class="trigger"><strong>Triggers:</strong> "connected," "reachable," "path between," "grid flood fill"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Heap (Priority Queue)</h4>
+    <p>Kth largest/smallest, merge k sorted lists, task scheduler, running median.</p>
+    <p class="trigger"><strong>Triggers:</strong> "top k," "kth largest/smallest," "real-time stream"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Stack</h4>
+    <p>Valid parentheses, evaluate expressions, next greater element, min stack.</p>
+    <p class="trigger"><strong>Triggers:</strong> "matching brackets," "nesting," "next greater," "histogram"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Dynamic Programming</h4>
+    <p>Coin change, LCS, knapsack, edit distance, longest increasing subsequence.</p>
+    <p class="trigger"><strong>Triggers:</strong> "number of ways," "minimum cost," "can you achieve," "maximum profit"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Backtracking</h4>
+    <p>Subsets, permutations, combination sum, N-Queens, word search.</p>
+    <p class="trigger"><strong>Triggers:</strong> "all possible," "generate all," "every combination," "valid arrangements"</p>
+  </div>
+  <div class="pattern-card">
+    <h4>Union-Find</h4>
+    <p>Number of components, detecting cycles, redundant connection.</p>
+    <p class="trigger"><strong>Triggers:</strong> "connected components," "same group," "dynamic connectivity"</p>
+  </div>
+</div>
+
+<h2>Complexity Quick-Reference</h2>
+
+<div class="table-wrap">
+<table class="complexity-table">
+  <thead><tr><th>Operation</th><th>Array</th><th>Linked List</th><th>BST (balanced)</th><th>Hash Map</th><th>Heap</th></tr></thead>
+  <tbody>
+    <tr><td>Access by index</td><td>O(1)</td><td>O(n)</td><td>O(log n)</td><td>O(1) avg</td><td>O(1) peek</td></tr>
+    <tr><td>Search</td><td>O(n)</td><td>O(n)</td><td>O(log n)</td><td>O(1) avg</td><td>O(n)</td></tr>
+    <tr><td>Insert</td><td>O(1) append / O(n) at i</td><td>O(1) head / O(n) at i</td><td>O(log n)</td><td>O(1) avg</td><td>O(log n)</td></tr>
+    <tr><td>Delete</td><td>O(n)</td><td>O(1) if given node</td><td>O(log n)</td><td>O(1) avg</td><td>O(log n)</td></tr>
+    <tr><td>Min / Max</td><td>O(n)</td><td>O(n)</td><td>O(log n)</td><td>O(n)</td><td>O(1)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Confidence Tracker</h2>
+<p>Rate yourself honestly on each topic after completing the book. Revisit anything rated 1 or 2.</p>
+
+<div class="table-wrap">
+<table class="confidence-table">
+  <thead><tr><th>Topic</th><th>Self-Rating (1–5)</th><th>Can explain aloud?</th><th>Notes / Weak spots</th></tr></thead>
+  <tbody>
+    <tr><td>Big-O Analysis</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Arrays + Sliding Window</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Two Pointers</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Hash Maps &amp; Sets</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Linked Lists</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Stacks</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Queues &amp; Deques</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Binary Trees</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>BST</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Heaps &amp; Priority Queues</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Graphs (DFS/BFS)</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Union-Find</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Sorting Algorithms</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Binary Search</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Backtracking</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Dynamic Programming</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+    <tr><td>Pattern Recognition</td><td class="star-cell">☆ ☆ ☆ ☆ ☆</td><td>☐ Yes  ☐ No</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 18 — FINAL PRACTICE SET
+     ============================================================ -->
+<section id="ch18" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 5 — Interview Preparation</div>
+  <div class="chapter-number">18</div>
+  <h1 class="chapter-title">Final Practice Set</h1>
+  <p class="chapter-intro">These problems are selected to mimic the difficulty distribution and topic mix of a real AI Engineer technical screen. Attempt each one cold — no hints, time yourself, and apply UMPIRE. Then check your solution against the one provided.</p>
+</div>
+<div class="chapter-body">
+
+<!-- FINAL PROBLEM 1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Final Problem 1 — Jump Game</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array <code>nums</code> where <code>nums[i]</code> is the maximum jump length from index <code>i</code>, return <code>True</code> if you can reach the last index starting from index 0.</p>
+      <p><strong>Example:</strong> <code>[2,3,1,1,4]</code> → <code>True</code>. <code>[3,2,1,0,4]</code> → <code>False</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Pattern</div>
+      <p>Greedy. Track the farthest index reachable. If the current index is ever beyond the farthest reach, you are stuck.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">can_jump</span>(nums: list[<span class="bi">int</span>]) -> <span class="bi">bool</span>:
+    reach = <span class="nu">0</span>   <span class="cm"># farthest index we can reach</span>
+    <span class="kw">for</span> i, jump <span class="kw">in</span> <span class="bi">enumerate</span>(nums):
+        <span class="kw">if</span> i > reach:
+            <span class="kw">return</span> <span class="kw">False</span>   <span class="cm"># stranded — cannot reach this index</span>
+        reach = <span class="bi">max</span>(reach, i + jump)
+    <span class="kw">return</span> <span class="kw">True</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(1)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL PROBLEM 2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Final Problem 2 — Lowest Common Ancestor (Binary Tree)</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the root of a binary tree (not a BST) and two nodes <code>p</code> and <code>q</code>, find their lowest common ancestor.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Pattern</div>
+      <p>Post-order DFS. Return the node if it matches p or q. The LCA is the first node where both left and right subtrees return non-None.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> typing <span class="kw">import</span> Optional
+
+<span class="kw">def</span> <span class="fn">lca_binary_tree</span>(root: Optional[TreeNode],
+                    p: TreeNode, q: TreeNode) -> Optional[TreeNode]:
+    <span class="kw">if</span> <span class="kw">not</span> root <span class="kw">or</span> root == p <span class="kw">or</span> root == q:
+        <span class="kw">return</span> root   <span class="cm"># found one of the targets (or end of branch)</span>
+
+    left  = lca_binary_tree(root.left,  p, q)
+    right = lca_binary_tree(root.right, p, q)
+
+    <span class="kw">if</span> left <span class="kw">and</span> right:
+        <span class="kw">return</span> root    <span class="cm"># p and q split here → this node is the LCA</span>
+    <span class="kw">return</span> left <span class="kw">if</span> left <span class="kw">else</span> right  <span class="cm"># both in same subtree</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(h)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL PROBLEM 3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Final Problem 3 — Non-Overlapping Intervals</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array of intervals, find the minimum number of intervals you must remove to make the rest non-overlapping.</p>
+      <p><strong>Example:</strong> <code>[[1,2],[2,3],[3,4],[1,3]]</code> → <code>1</code> (remove [1,3])</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Pattern</div>
+      <p>Greedy. Sort by end time. Greedily keep intervals with the earliest end time. If an interval overlaps the last kept one, discard it.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">erase_overlap_intervals</span>(intervals: list[list[<span class="bi">int</span>]]) -> <span class="bi">int</span>:
+    <span class="kw">if</span> <span class="kw">not</span> intervals: <span class="kw">return</span> <span class="nu">0</span>
+    intervals.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: x[<span class="nu">1</span>])  <span class="cm"># sort by end time</span>
+
+    removed = <span class="nu">0</span>
+    last_end = intervals[<span class="nu">0</span>][<span class="nu">1</span>]   <span class="cm"># end of last kept interval</span>
+
+    <span class="kw">for</span> start, end <span class="kw">in</span> intervals[<span class="nu">1</span>:]:
+        <span class="kw">if</span> start < last_end:        <span class="cm"># overlap: discard this interval</span>
+            removed += <span class="nu">1</span>
+        <span class="kw">else</span>:                       <span class="cm"># no overlap: keep it</span>
+            last_end = end
+    <span class="kw">return</span> removed</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n log n)</strong> — dominated by sort. <strong>Space: O(1)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL PROBLEM 4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Final Problem 4 — Number of Islands (DFS)</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Same as Problem 7.1 — but this time solve it using DFS instead of BFS.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Pattern</div>
+      <p>Graph DFS. Flood-fill each island by marking cells visited.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python — DFS version <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">num_islands_dfs</span>(grid: list[list[<span class="bi">str</span>]]) -> <span class="bi">int</span>:
+    <span class="kw">if</span> <span class="kw">not</span> grid: <span class="kw">return</span> <span class="nu">0</span>
+    rows, cols = <span class="bi">len</span>(grid), <span class="bi">len</span>(grid[<span class="nu">0</span>])
+
+    <span class="kw">def</span> <span class="fn">dfs</span>(r, c):
+        <span class="kw">if</span> <span class="kw">not</span> (<span class="nu">0</span> <= r < rows <span class="kw">and</span> <span class="nu">0</span> <= c < cols) <span class="kw">or</span> grid[r][c] != <span class="st">'1'</span>:
+            <span class="kw">return</span>
+        grid[r][c] = <span class="st">'0'</span>   <span class="cm"># mark visited</span>
+        dfs(r+<span class="nu">1</span>,c); dfs(r-<span class="nu">1</span>,c); dfs(r,c+<span class="nu">1</span>); dfs(r,c-<span class="nu">1</span>)
+
+    count = <span class="nu">0</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="bi">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="bi">range</span>(cols):
+            <span class="kw">if</span> grid[r][c] == <span class="st">'1'</span>:
+                dfs(r, c)
+                count += <span class="nu">1</span>
+    <span class="kw">return</span> count</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(m × n)</strong>. <strong>Space: O(m × n)</strong> — worst case recursion depth for one large island.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL PROBLEM 5 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Final Problem 5 — Trapping Rain Water</span>
+    <span class="badge badge-advanced">Advanced</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array <code>height</code> where each element represents the height of a bar, compute how much water is trapped between bars after rain.</p>
+      <p><strong>Example:</strong> <code>[0,1,0,2,1,0,1,3,2,1,2,1]</code> → <code>6</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Water above position <code>i</code> = min(max height to its left, max height to its right) − height[i]. Use two pointers: <code>left</code> and <code>right</code>, tracking the maximum height seen from each side. Process from whichever side has the smaller maximum.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">trap</span>(height: list[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    left, right = <span class="nu">0</span>, <span class="bi">len</span>(height) - <span class="nu">1</span>
+    max_left = max_right = water = <span class="nu">0</span>
+
+    <span class="kw">while</span> left < right:
+        <span class="kw">if</span> height[left] <= height[right]:
+            <span class="kw">if</span> height[left] >= max_left:
+                max_left = height[left]
+            <span class="kw">else</span>:
+                water += max_left - height[left]   <span class="cm"># water fills here</span>
+            left += <span class="nu">1</span>
+        <span class="kw">else</span>:
+            <span class="kw">if</span> height[right] >= max_right:
+                max_right = height[right]
+            <span class="kw">else</span>:
+                water += max_right - height[right]
+            right -= <span class="nu">1</span>
+
+    <span class="kw">return</span> water</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — one pass. <strong>Space: O(1)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Two-pointer from both ends with running max values eliminates the need for prefix/suffix max arrays. The invariant: whichever side has the smaller maximum bottlenecks the water level — process that side first.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL PROBLEM 6 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Final Problem 6 — Longest Palindromic Substring</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a string <code>s</code>, return the longest palindromic substring.</p>
+      <p><strong>Example:</strong> <code>"babad"</code> → <code>"bab"</code> or <code>"aba"</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Expand Around Centre. For each character (and each pair of adjacent characters), try expanding outward as long as the characters match. Track the longest expansion seen.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">longest_palindrome</span>(s: <span class="bi">str</span>) -> <span class="bi">str</span>:
+    best_start = best_len = <span class="nu">0</span>
+
+    <span class="kw">def</span> <span class="fn">expand</span>(lo: <span class="bi">int</span>, hi: <span class="bi">int</span>):
+        <span class="kw">nonlocal</span> best_start, best_len
+        <span class="kw">while</span> lo >= <span class="nu">0</span> <span class="kw">and</span> hi < <span class="bi">len</span>(s) <span class="kw">and</span> s[lo] == s[hi]:
+            lo -= <span class="nu">1</span>; hi += <span class="nu">1</span>
+        length = hi - lo - <span class="nu">1</span>
+        <span class="kw">if</span> length > best_len:
+            best_len   = length
+            best_start = lo + <span class="nu">1</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(s)):
+        expand(i, i)      <span class="cm"># odd-length palindromes</span>
+        expand(i, i + <span class="nu">1</span>) <span class="cm"># even-length palindromes</span>
+
+    <span class="kw">return</span> s[best_start: best_start + best_len]</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n²)</strong> — 2n centres, each expand up to O(n). <strong>Space: O(1)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Book Complete — What You Now Know</h3>
+  <ul class="checklist">
+    <li>Big-O analysis: time and space complexity for any piece of code.</li>
+    <li>Arrays, strings, two pointers, sliding window, prefix products, Kadane's.</li>
+    <li>Hash maps and sets: O(1) lookup, frequency counting, grouping.</li>
+    <li>Linked lists: reversal, fast/slow pointers, dummy head, find-middle + reverse + merge.</li>
+    <li>Stacks: LIFO, monotonic stack (NGE), Min Stack, histogram.</li>
+    <li>Queues &amp; Deques: FIFO, BFS, sliding window maximum.</li>
+    <li>Trees: DFS traversals, BFS level-order, dual-return pattern, path problems.</li>
+    <li>BST: inorder = sorted, validate with bounds, LCA, kth smallest.</li>
+    <li>Heaps: min/max heap, top-k, merge k lists, two-heap median.</li>
+    <li>Graphs: adjacency list, DFS/BFS, Union-Find, cycle detection, BFS shortest path.</li>
+    <li>Sorting: merge sort, quick sort, intervals, Dutch National Flag.</li>
+    <li>Binary Search: exact, lower-bound, search on answer space.</li>
+    <li>Backtracking: choose-explore-unchoose, subsets, permutations, grid search.</li>
+    <li>Dynamic Programming: 1D, 2D, knapsack variants, overlapping subproblems.</li>
+    <li>Interview framework: UMPIRE, complexity communication, common mistakes.</li>
+    <li>Pattern recognition: 12 trigger-based pattern mappings.</li>
+  </ul>
+</div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">🟢 A Final Word</div>
+  <p>You now have every tool you need. The gap between knowing this material and clearing an interview is not knowledge — it is <em>practice under pressure</em>. Time yourself on problems. Practice verbalising your thinking. Review solutions you could not solve, understand why, and try the problem again a week later. Consistency over weeks beats intensity over days. Good luck — you are ready.</p>
+</div>
+
+</div><!-- .chapter-body -->
+</section>

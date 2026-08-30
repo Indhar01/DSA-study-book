@@ -1,0 +1,961 @@
+<!-- ============================================================
+     COVER PAGE
+     ============================================================ -->
+<section id="cover-page" data-section>
+<div id="cover">
+  <div class="cover-icon">📚</div>
+  <h1 class="cover-title">DSA Mastery: A Complete Study Book for AI Engineers</h1>
+  <p class="cover-sub">From zero to interview-ready. Every data structure, every algorithm, every pattern — explained the way a great teacher would explain it.</p>
+  <span class="cover-badge">18 Chapters · 60+ Solved Problems · All in Python 3</span>
+  <div class="cover-meta">
+    Written for beginners and intermediate learners preparing for product-based company interviews.<br>
+    No prior DSA experience required.
+  </div>
+</div>
+</section>
+
+<!-- ============================================================
+     PART 1 DIVIDER
+     ============================================================ -->
+<div class="part-divider">
+  <span class="part-number">I</span>
+  <div class="part-title">Foundations</div>
+  <div class="part-desc">Building the mental models that make everything else click</div>
+</div>
+
+<!-- ============================================================
+     CHAPTER 1
+     ============================================================ -->
+<section id="ch1" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 1 — Foundations</div>
+  <div class="chapter-number">01</div>
+  <h1 class="chapter-title">What is DSA and Why Should You Care?</h1>
+  <p class="chapter-intro">Before we write a single line of code, let us talk about why you are here — and why learning DSA will be one of the most valuable investments you ever make as a software engineer.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Story of Two Engineers</h2>
+<p>Imagine two engineers are both tasked with finding a specific customer record from a list of one million users. The first engineer writes a straightforward solution: she loops through every single record, one by one, checking if it matches. On her laptop, it finishes in about 8 seconds. The second engineer thinks for a moment, organises the data differently, and writes a solution that finishes in under a millisecond — thousands of times faster. They wrote roughly the same number of lines of code. The difference? The second engineer understood <strong>data structures and algorithms</strong>.</p>
+
+<p>This is not a made-up story. This gap in performance — and in thinking — separates junior engineers from senior engineers, and it separates candidates who clear technical interviews from those who do not.</p>
+
+<h2>So, What Exactly Is DSA?</h2>
+<p>Let us define our terms clearly, because in this book we will never use a word without explaining it first.</p>
+
+<p>A <strong>data structure</strong> is a way of organising and storing data in memory so that it can be accessed and modified efficiently. Think of it like choosing the right container in your kitchen. You would not store soup in a paper bag, and you would not carry loose grapes in a pitcher. Different containers work best for different purposes. In computing, an <strong>array</strong> is like a neat row of labelled boxes, a <strong>stack</strong> is like a pile of plates, and a <strong>queue</strong> is like the line at a coffee shop.</p>
+
+<p>An <strong>algorithm</strong> is a precise, step-by-step set of instructions to solve a problem. It is a recipe. A good recipe not only produces the right dish — it does so efficiently, without wasting ingredients or time. Similarly, a good algorithm not only produces the right answer — it does so without wasting memory or computation.</p>
+
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Think of your computer's memory as a city, and data structures as the different kinds of buildings in that city — apartments (arrays), warehouses (heaps), subway maps (graphs). Algorithms are the traffic rules and navigation strategies that let you move through that city efficiently. DSA is the art of being a brilliant city planner <em>and</em> a savvy navigator at the same time.</p>
+</div>
+
+<h2>Why Do Product-Based Companies Test DSA?</h2>
+<p>You might be wondering: "I just want to build web apps. Why do I need to know about trees and graphs?" That is a completely fair question, and it deserves a direct answer.</p>
+<p>Product-based companies — Google, Amazon, Meta, Microsoft, and hundreds of startups — use DSA interviews for three reasons:</p>
+<ol>
+  <li><strong>It reveals how you think.</strong> Solving an unfamiliar algorithmic problem under pressure shows your ability to decompose complexity, reason systematically, and communicate clearly — skills that matter every day on the job.</li>
+  <li><strong>It predicts performance on real problems.</strong> The engineer who can optimise a graph traversal will also spot the performance bottleneck in a production service. The thinking is the same.</li>
+  <li><strong>It is a shared language.</strong> When an interviewer says "this is an O(n log n) problem," everyone in the room understands exactly what that means. DSA is the universal vocabulary of software engineering.</li>
+</ol>
+
+<h2>Why Is DSA Especially Important for AI Engineers?</h2>
+<p>If you are pursuing an AI Engineer role specifically, DSA matters for all the above reasons plus a few more:</p>
+<ul>
+  <li><strong>Data pipelines are just algorithms on data structures.</strong> Preprocessing millions of training examples, building feature stores, deduplicating datasets — these are all algorithmic problems.</li>
+  <li><strong>Embedding lookups use hashing and trees.</strong> Vector databases and nearest-neighbour search rely directly on tree structures and graph algorithms.</li>
+  <li><strong>You will debug ML systems.</strong> When your model training is slow or your inference service times out, understanding algorithmic complexity is what lets you diagnose and fix it.</li>
+</ul>
+
+<h2>How to Use This Book</h2>
+<p>This book is designed to be read from front to back, especially if you are a beginner. Each chapter builds on the previous one. That said, if you already have some experience, you are welcome to jump to any chapter using the sidebar on the left.</p>
+
+<p>Here is how to get the most out of each chapter:</p>
+<ol>
+  <li><strong>Read the analogy first.</strong> Every concept is introduced with a real-world analogy before any technical definition. Do not skip these — they are the seed that makes everything else grow.</li>
+  <li><strong>Run the code yourself.</strong> Every code example in this book is ready to copy and run. Use the "Copy" button on each code block and paste it into a Python file or a REPL.</li>
+  <li><strong>Do the exercises.</strong> At the end of every chapter there is a "Try It Yourself" section. These are not optional. Writing code is the only way to truly learn DSA.</li>
+  <li><strong>Be patient with yourself.</strong> Some concepts will not click immediately. That is perfectly normal. Read it again, try a different analogy, sleep on it. The brain needs time to build new connections.</li>
+</ol>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 Note</div>
+  <p>All code in this book is written in <strong>Python 3</strong>. You do not need any special libraries — everything uses Python's built-in tools. If you are new to Python, a basic familiarity with variables, loops, and functions is all you need to get started.</p>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A <strong>data structure</strong> is a way to organise data in memory for efficient access and modification.</li>
+    <li>An <strong>algorithm</strong> is a precise step-by-step recipe for solving a problem.</li>
+    <li>DSA interviews test your reasoning ability, not just your memorisation.</li>
+    <li>AI Engineers need DSA for data pipelines, vector search, and performance debugging.</li>
+    <li>This book is best read sequentially, with hands-on practice at every chapter.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 1.1 (Warm-up)</strong>
+      <p>Write a Python function that, given a list of 1,000 names, finds whether the name "Alice" is in the list. How many comparisons does your solution make in the worst case?</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 1.2 (Reflection)</strong>
+      <p>Think of three everyday scenarios in your own life that are like a "stack" (last in, first out) and three that are like a "queue" (first in, first out). Write them down before reading the chapters on Stacks and Queues.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 1.3 (Research)</strong>
+      <p>Look up the terms "time complexity" and "space complexity" without reading Chapter 2 yet. Write down your current understanding in one sentence each. Revisit these notes after finishing Chapter 2 to see how your understanding evolved.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 2
+     ============================================================ -->
+<section id="ch2" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 1 — Foundations</div>
+  <div class="chapter-number">02</div>
+  <h1 class="chapter-title">Big-O Notation — Measuring the Cost of Your Code</h1>
+  <p class="chapter-intro">How do you know if your code is fast enough? How do you compare two solutions without running them? Big-O notation is the ruler that every engineer uses to measure algorithmic efficiency — and once you understand it, you will see it everywhere.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Problem with Measuring Time Directly</h2>
+<p>Suppose you write a function and it takes 0.3 seconds to run. Is that fast? It depends. Fast compared to what? On whose computer? With how much data? If you run the same code on a newer laptop with half the data, it might take 0.05 seconds. On an old server with ten times the data, it might take 30 seconds. Raw time measurements are unreliable because they depend on hardware, operating system load, and input size.</p>
+
+<p>What we really want to know is: <em>as the input grows larger, how does the runtime grow?</em> That question is what Big-O notation answers.</p>
+
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Imagine you are estimating how long it takes to read a book. Instead of saying "it takes 4 hours," you say "it takes roughly 2 minutes per page." That rate — 2 minutes per page — is your "complexity." A 100-page book takes 200 minutes. A 500-page book takes 1,000 minutes. The formula <em>scales</em> with the input. Big-O is exactly this: we describe how an algorithm's cost scales with the size of its input.</p>
+</div>
+
+<h2>Formal Definition (Plain English Version)</h2>
+<p>Big-O notation, written as <code>O(f(n))</code>, describes the <strong>upper bound</strong> of an algorithm's growth rate in terms of input size <code>n</code>. In other words: in the worst case, as <code>n</code> gets very large, how does the number of operations grow?</p>
+
+<p>We drop constants and lower-order terms because, at large scales, they do not matter. For example, if an algorithm does <code>3n + 5</code> operations, we say it is <code>O(n)</code>. The <code>3</code> and the <code>5</code> are insignificant when <code>n</code> is a million.</p>
+
+<h2>The Most Common Complexity Classes</h2>
+<p>Let us walk through each complexity class from fastest to slowest, with an analogy and an example for each.</p>
+
+<h3>O(1) — Constant Time</h3>
+<p>No matter how large the input, the operation always takes the same amount of time. Accessing an element in an array by its index is O(1) — you jump directly to it, like knowing the exact page number in a book.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">get_first_element</span>(arr: <span class="bi">list</span>) -> <span class="bi">int</span>:
+    <span class="cm"># No matter how long arr is, this is ONE operation.</span>
+    <span class="kw">return</span> arr[<span class="nu">0</span>]</code></pre>
+</div>
+
+<h3>O(log n) — Logarithmic Time</h3>
+<p>The number of operations grows logarithmically — meaning each step cuts the remaining work roughly in half. Binary search is the classic example. If you have 1,000,000 items, you only need about 20 steps to find anything. Think of it as looking up a word in a physical dictionary: you open to the middle, decide left or right, open to the middle of that half, and repeat.</p>
+
+<h3>O(n) — Linear Time</h3>
+<p>The operations grow proportionally with the input. If you have twice as much data, it takes twice as long. A simple loop through a list is O(n). Like reading every page of a book — more pages means proportionally more reading.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">find_max</span>(arr: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    <span class="cm"># We visit every element exactly once: O(n)</span>
+    max_val = arr[<span class="nu">0</span>]
+    <span class="kw">for</span> num <span class="kw">in</span> arr:
+        <span class="kw">if</span> num > max_val:
+            max_val = num
+    <span class="kw">return</span> max_val</code></pre>
+</div>
+
+<h3>O(n log n) — Linearithmic Time</h3>
+<p>A loop that also does logarithmic work inside, or algorithms that divide and then recombine. Merge sort and heap sort run in O(n log n). This is the practical lower bound for comparison-based sorting — you cannot sort an arbitrary list faster than this.</p>
+
+<h3>O(n²) — Quadratic Time</h3>
+<p>A nested loop where both loops go up to <code>n</code>. Comparing every element to every other element is O(n²). With 1,000 elements, that is 1,000,000 operations. With 10,000 elements, it is 100,000,000. Quadratic algorithms become painfully slow at moderate scales.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">has_duplicate_slow</span>(arr: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">bool</span>:
+    <span class="cm"># Outer loop runs n times, inner loop runs n times → O(n²)</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(arr)):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="bi">range</span>(i + <span class="nu">1</span>, <span class="bi">len</span>(arr)):
+            <span class="kw">if</span> arr[i] == arr[j]:
+                <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">return</span> <span class="kw">False</span></code></pre>
+</div>
+
+<h3>O(2ⁿ) — Exponential Time</h3>
+<p>The work doubles with every additional element. Generating all subsets of a set is O(2ⁿ). With 20 items, that is over 1,000,000 operations. Exponential algorithms are almost always impractical without optimisation (such as dynamic programming).</p>
+
+<h3>O(n!) — Factorial Time</h3>
+<p>Generating every possible ordering (permutation) of <code>n</code> items. With just 12 items, that is 479,001,600 orderings. Factorial algorithms are only feasible for very small inputs.</p>
+
+<h2>Visualising the Growth Rates</h2>
+<div class="table-wrap">
+<table class="complexity-table">
+  <thead><tr><th>Complexity</th><th>n = 10</th><th>n = 100</th><th>n = 1,000</th><th>n = 1,000,000</th><th>Label</th></tr></thead>
+  <tbody>
+    <tr><td><code>O(1)</code></td><td>1</td><td>1</td><td>1</td><td>1</td><td>Excellent</td></tr>
+    <tr><td><code>O(log n)</code></td><td>3</td><td>7</td><td>10</td><td>20</td><td>Excellent</td></tr>
+    <tr><td><code>O(n)</code></td><td>10</td><td>100</td><td>1,000</td><td>1,000,000</td><td>Good</td></tr>
+    <tr><td><code>O(n log n)</code></td><td>33</td><td>664</td><td>9,966</td><td>19,931,568</td><td>Good</td></tr>
+    <tr><td><code>O(n²)</code></td><td>100</td><td>10,000</td><td>1,000,000</td><td>10¹²</td><td>Slow</td></tr>
+    <tr><td><code>O(2ⁿ)</code></td><td>1,024</td><td>10³⁰</td><td>—</td><td>—</td><td>Impractical</td></tr>
+    <tr><td><code>O(n!)</code></td><td>3,628,800</td><td>—</td><td>—</td><td>—</td><td>Impractical</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Space Complexity</h2>
+<p>Big-O does not only measure time — it also measures <strong>memory usage</strong>. Space complexity is how much extra memory your algorithm needs as the input grows. A function that creates a copy of the input array uses <code>O(n)</code> space. A function that only uses a few variables regardless of input size uses <code>O(1)</code> space.</p>
+
+<p>In many real-world scenarios — especially in AI engineering where datasets can be enormous — space efficiency matters as much as time efficiency.</p>
+
+<h2>Best, Worst, and Average Case</h2>
+<p>When we say an algorithm is O(n), we typically mean the <strong>worst case</strong>. But it helps to understand all three:</p>
+<ul>
+  <li><strong>Best case:</strong> The most favourable input. Searching a list where the target is the first element is O(1) for linear search in the best case.</li>
+  <li><strong>Worst case:</strong> The most unfavourable input. The target is the last element, or not present at all. This is what Big-O typically refers to.</li>
+  <li><strong>Average case:</strong> Averaged over all possible inputs. For linear search, on average we look at half the list, so the average case is O(n/2) = O(n).</li>
+</ul>
+
+<div class="callout callout-mistake">
+  <div class="callout-title">🔴 Common Beginner Mistake</div>
+  <p>Many beginners confuse "O(n)" with "slow" and "O(1)" with "fast." But remember: O(1) with a huge constant can be slower than O(n) for small inputs. Big-O describes <em>how the algorithm scales</em>, not its absolute speed. Always consider the actual input sizes you expect in practice.</p>
+</div>
+
+<div class="callout callout-tip">
+  <div class="callout-tip"></div>
+  <div class="callout-title">🟢 Tip</div>
+  <p>When analysing a piece of code, count the loops. One loop → O(n). Two nested loops → O(n²). A loop that halves the input each iteration → O(log n). A loop inside a loop inside a loop → O(n³). This rough counting gets you 90% of the way there in interviews.</p>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>Big-O notation describes how an algorithm's cost scales with input size <code>n</code>.</li>
+    <li>We focus on the <strong>dominant term</strong> and drop constants.</li>
+    <li>Common complexities from best to worst: O(1), O(log n), O(n), O(n log n), O(n²), O(2ⁿ), O(n!).</li>
+    <li><strong>Space complexity</strong> measures memory usage, not just time.</li>
+    <li>Big-O typically refers to the <strong>worst-case</strong> behaviour.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 2.1 (Beginner)</strong>
+      <p>What is the time complexity of the following code? Explain your reasoning.<br><code>for i in range(n): for j in range(n): print(i + j)</code></p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 2.2 (Intermediate)</strong>
+      <p>Write two versions of a function that checks if a list has any duplicate values. The first should be O(n²) using nested loops. The second should be O(n) using a set. Compare them by printing how long each takes for a list of 10,000 numbers using Python's <code>time</code> module.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 2.3 (Advanced)</strong>
+      <p>Analyse the time and space complexity of this function: it takes a list, creates a dictionary counting frequencies, then returns the most common element. What is the time complexity? What is the space complexity? Can you reduce the space usage?</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 3
+     ============================================================ -->
+<section id="ch3" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 1 — Foundations</div>
+  <div class="chapter-number">03</div>
+  <h1 class="chapter-title">Arrays and Strings</h1>
+  <p class="chapter-intro">Arrays are the foundation of almost everything else in computer science. If you can master the patterns of array manipulation, you will find that a surprising number of seemingly different problems all reduce to the same few ideas.</p>
+</div>
+<div class="chapter-body">
+
+<h2>What Is an Array?</h2>
+<p>Imagine a row of numbered mailboxes in an apartment building. Each mailbox has a fixed address (index), and you can instantly retrieve or deposit mail in any box by knowing its number. That is an array. In Python, this corresponds to a <strong>list</strong> — a contiguous sequence of elements, each accessible by a zero-based integer index.</p>
+
+<p>Key properties of arrays:</p>
+<ul>
+  <li><strong>Random access in O(1):</strong> You can jump to any element instantly using its index.</li>
+  <li><strong>Fixed or dynamic size:</strong> In languages like C, arrays have a fixed size. Python lists are dynamic — they grow automatically as you append items.</li>
+  <li><strong>Contiguous memory:</strong> All elements are stored next to each other in memory, which makes sequential access extremely fast due to CPU cache effects.</li>
+</ul>
+
+<h2>Strings Are Just Arrays of Characters</h2>
+<p>In Python, a string like <code>"hello"</code> behaves like an array of characters: <code>['h','e','l','l','o']</code>. Many string problems are solved with exactly the same techniques as array problems. One key difference: Python strings are <strong>immutable</strong> — you cannot change a character in place. You must create a new string or work with a list of characters and join at the end.</p>
+
+<h2>The Two-Pointer Technique</h2>
+<p>Here is a pattern that will unlock dozens of problems. Instead of using one index to traverse an array, you use <strong>two indices simultaneously</strong> — one starting from the left and one from the right, both moving toward the middle (or both moving from the left at different speeds).</p>
+
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Think of two people folding a long piece of fabric. One person holds the left end and walks right. The other holds the right end and walks left. They keep meeting and folding until they reach the middle. Together they process the entire fabric much more cleverly than one person walking the whole length alone.</p>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Two-Pointer Template <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">two_pointer_template</span>(arr: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">None</span>:
+    left, right = <span class="nu">0</span>, <span class="bi">len</span>(arr) - <span class="nu">1</span>
+    <span class="kw">while</span> left < right:
+        <span class="cm"># Do something with arr[left] and arr[right]</span>
+        <span class="cm"># Then move one or both pointers:</span>
+        <span class="kw">if</span> <span class="cm"># some condition</span>:
+            left += <span class="nu">1</span>
+        <span class="kw">else</span>:
+            right -= <span class="nu">1</span></code></pre>
+</div>
+
+<h2>The Sliding Window Technique</h2>
+<p>Many array and string problems ask about a contiguous subarray or substring that satisfies some condition. The naive approach is to examine every possible subarray — O(n²). The sliding window technique solves many of these in O(n) by maintaining a "window" (a range of indices) and cleverly expanding or shrinking it.</p>
+
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Imagine looking through a physical sliding window on a train. As the train moves, your window always shows a contiguous stretch of the passing landscape. You slide the window forward to see new scenery and let old scenery go. The key insight is that you do not restart from scratch each time — you just slide.</p>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Sliding Window Template <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">sliding_window_template</span>(arr: <span class="bi">list</span>[<span class="bi">int</span>], k: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="cm"># Fixed-size window of size k</span>
+    window_sum = <span class="bi">sum</span>(arr[:k])          <span class="cm"># initialise first window</span>
+    best = window_sum
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(k, <span class="bi">len</span>(arr)):
+        window_sum += arr[i] - arr[i - k]  <span class="cm"># slide: add new, remove old</span>
+        best = <span class="bi">max</span>(best, window_sum)
+    <span class="kw">return</span> best</code></pre>
+</div>
+
+<!-- PROBLEM 1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 3.1 — Maximum Subarray (Kadane's Algorithm)</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) which has the largest sum, and return its sum.</p>
+      <p><strong>Example:</strong> Input: <code>[-2, 1, -3, 4, -1, 2, 1, -5, 4]</code> → Output: <code>6</code> (subarray <code>[4, -1, 2, 1]</code>)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Imagine you are walking a path where some tiles give you points and some take them away. At each tile, you face a choice: keep going from where you are, or start fresh here if starting fresh would give you more. Kadane's algorithm formalises exactly this decision. We track the best sum <em>ending at</em> the current position. If continuing from the previous position would only hurt us (i.e., the running sum has gone negative), we restart from the current element.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Approach</div>
+      <ol>
+        <li>Initialise <code>current_sum</code> and <code>best_sum</code> both to the first element.</li>
+        <li>Loop through the array starting from index 1.</li>
+        <li>At each position, decide: extend the current subarray (<code>current_sum + num</code>), or start a new one (<code>num</code>). Take the larger.</li>
+        <li>Update <code>best_sum</code> if <code>current_sum</code> just grew larger.</li>
+        <li>Return <code>best_sum</code>.</li>
+      </ol>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">max_subarray</span>(nums: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    <span class="st">"""Return the maximum sum of any contiguous subarray."""</span>
+    current_sum = nums[<span class="nu">0</span>]  <span class="cm"># best sum ending at current position</span>
+    best_sum    = nums[<span class="nu">0</span>]  <span class="cm"># global best seen so far</span>
+
+    <span class="kw">for</span> num <span class="kw">in</span> nums[<span class="nu">1</span>:]:
+        <span class="cm"># Either extend the running subarray or start fresh here</span>
+        current_sum = <span class="bi">max</span>(num, current_sum + num)
+        best_sum    = <span class="bi">max</span>(best_sum, current_sum)
+
+    <span class="kw">return</span> best_sum</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Line-by-Line Explanation</div>
+      <ul>
+        <li><code>current_sum = nums[0]</code> — We start with just the first element as our "running" subarray.</li>
+        <li><code>best_sum = nums[0]</code> — The best we have seen so far is also just the first element.</li>
+        <li><code>for num in nums[1:]</code> — We visit each element from the second onwards.</li>
+        <li><code>current_sum = max(num, current_sum + num)</code> — This is the heart of the algorithm. If <code>current_sum</code> was negative, adding it to <code>num</code> would give us less than <code>num</code> alone. So we reset: just take <code>num</code> as our new starting point.</li>
+        <li><code>best_sum = max(best_sum, current_sum)</code> — Update the global best if we just found something bigger.</li>
+      </ul>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Dry Run</div>
+      <div class="dry-run"><pre>
+Input: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+num  | current_sum         | best_sum
+-----|---------------------|----------
+init | -2                  | -2
+  1  | max(1, -2+1)=-1→1   | 1
+ -3  | max(-3, 1-3)=-2→-2  | 1
+  4  | max(4, -2+4)=2→4    | 4
+ -1  | max(-1, 4-1)=3→3    | 4
+  2  | max(2, 3+2)=5→5     | 5
+  1  | max(1, 5+1)=6→6     | 6   ← new best
+ -5  | max(-5, 6-5)=1→1    | 6
+  4  | max(4, 1+4)=5→5     | 6
+
+Result: 6
+</pre></div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — We visit each element exactly once in a single pass.</p>
+      <p><strong>Space: O(1)</strong> — We only use two extra variables regardless of input size.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>When deciding at each position whether to "extend or restart," you have discovered Kadane's algorithm. This is a classic example of converting an O(n²) brute-force enumeration into a single O(n) pass by carrying forward only the information you actually need.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 3.2 — Best Time to Buy and Sell Stock</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>You are given an array <code>prices</code> where <code>prices[i]</code> is the price of a stock on day <code>i</code>. You may buy on one day and sell on a later day. Return the maximum profit. If no profit is possible, return 0.</p>
+      <p><strong>Example:</strong> Input: <code>[7, 1, 5, 3, 6, 4]</code> → Output: <code>5</code> (buy at 1, sell at 6)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Track the lowest price seen so far. At each day, ask: "If I sell today, what is my profit given the cheapest purchase day I have seen?" Keep track of the best such profit.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">max_profit</span>(prices: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    min_price  = <span class="bi">float</span>(<span class="st">'inf'</span>)  <span class="cm"># lowest buy price seen so far</span>
+    max_profit = <span class="nu">0</span>             <span class="cm"># best profit so far</span>
+    <span class="kw">for</span> price <span class="kw">in</span> prices:
+        <span class="kw">if</span> price < min_price:
+            min_price = price          <span class="cm"># found a cheaper buy day</span>
+        <span class="kw">elif</span> price - min_price > max_profit:
+            max_profit = price - min_price  <span class="cm"># better profit found</span>
+    <span class="kw">return</span> max_profit</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Dry Run</div>
+      <div class="dry-run"><pre>
+prices = [7, 1, 5, 3, 6, 4]
+
+price | min_price | profit today | max_profit
+------|-----------|--------------|----------
+  7   |     7     |      0       |     0
+  1   |     1     |      0       |     0
+  5   |     1     |      4       |     4
+  3   |     1     |      2       |     4
+  6   |     1     |      5       |     5  ← best
+  4   |     1     |      3       |     5
+
+Result: 5
+</pre></div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Single pass. <strong>Space: O(1)</strong> — Two variables.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Many "optimal choice" problems boil down to tracking a running minimum (or maximum) as you scan left to right. You do not need to compare every pair.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 3.3 — Product of Array Except Self</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an integer array <code>nums</code>, return an array <code>answer</code> such that <code>answer[i]</code> equals the product of all elements except <code>nums[i]</code>. You may not use division. Must run in O(n).</p>
+      <p><strong>Example:</strong> Input: <code>[1, 2, 3, 4]</code> → Output: <code>[24, 12, 8, 6]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>For position <code>i</code>, the answer is (product of everything to the left) × (product of everything to the right). Compute a prefix-product array in one pass, then multiply by a running suffix product in a second pass.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">product_except_self</span>(nums: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">list</span>[<span class="bi">int</span>]:
+    n = <span class="bi">len</span>(nums)
+    result = [<span class="nu">1</span>] * n
+
+    <span class="cm"># Pass 1: fill result[i] with the product of all elements LEFT of i</span>
+    prefix = <span class="nu">1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(n):
+        result[i] = prefix
+        prefix *= nums[i]
+
+    <span class="cm"># Pass 2: multiply result[i] by product of all elements RIGHT of i</span>
+    suffix = <span class="nu">1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(n - <span class="nu">1</span>, -<span class="nu">1</span>, -<span class="nu">1</span>):
+        result[i] *= suffix
+        suffix *= nums[i]
+
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Two separate linear passes. <strong>Space: O(1)</strong> extra (the output array does not count).</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>When you cannot use division, think about what information you can precompute — prefix products from the left and suffix products from the right — and combine them.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 3.4 — Longest Substring Without Repeating Characters</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a string <code>s</code>, find the length of the longest substring without repeating characters.</p>
+      <p><strong>Example:</strong> Input: <code>"abcabcbb"</code> → Output: <code>3</code> (substring <code>"abc"</code>)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a sliding window. Expand the right boundary one character at a time. If the new character is already inside the window, shrink the window from the left until the duplicate is gone. Use a set to track characters currently inside the window.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">length_of_longest_substring</span>(s: <span class="bi">str</span>) -> <span class="bi">int</span>:
+    char_set = <span class="bi">set</span>()     <span class="cm"># characters currently in the window</span>
+    left = <span class="nu">0</span>             <span class="cm"># left boundary of the window</span>
+    best = <span class="nu">0</span>             <span class="cm"># longest window seen</span>
+
+    <span class="kw">for</span> right <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(s)):
+        <span class="cm"># Shrink from left until no duplicate exists in window</span>
+        <span class="kw">while</span> s[right] <span class="kw">in</span> char_set:
+            char_set.remove(s[left])
+            left += <span class="nu">1</span>
+        char_set.add(s[right])           <span class="cm"># add new right character</span>
+        best = <span class="bi">max</span>(best, right - left + <span class="nu">1</span>)  <span class="cm"># update best</span>
+
+    <span class="kw">return</span> best</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Each character is added and removed from the set at most once. <strong>Space: O(min(n, alphabet_size))</strong> — The set holds the current window's characters.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The variable-size sliding window pattern: expand right freely, but shrink from left when a constraint is violated. The set (or map) acts as the window's "memory."</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 5 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 3.5 — Container With Most Water</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array <code>height</code> of <code>n</code> non-negative integers, where each element represents a vertical line at position <code>i</code> with height <code>height[i]</code>, find two lines that together with the x-axis form a container holding the most water.</p>
+      <p><strong>Example:</strong> Input: <code>[1,8,6,2,5,4,8,3,7]</code> → Output: <code>49</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use two pointers starting at both ends. The water held is <code>min(height[left], height[right]) * (right - left)</code>. Always move the pointer pointing to the shorter line inward — because the width will decrease, but maybe the height will increase enough to compensate. Moving the taller line inward can never improve things.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">max_area</span>(height: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    left, right = <span class="nu">0</span>, <span class="bi">len</span>(height) - <span class="nu">1</span>
+    best = <span class="nu">0</span>
+    <span class="kw">while</span> left < right:
+        water = <span class="bi">min</span>(height[left], height[right]) * (right - left)
+        best = <span class="bi">max</span>(best, water)
+        <span class="cm"># Move the shorter wall inward (moving the taller one cannot help)</span>
+        <span class="kw">if</span> height[left] <= height[right]:
+            left += <span class="nu">1</span>
+        <span class="kw">else</span>:
+            right -= <span class="nu">1</span>
+    <span class="kw">return</span> best</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — The two pointers together visit each element at most once. <strong>Space: O(1)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Two-pointer problems often hinge on a greedy argument: prove that moving one pointer is always at least as good as moving the other. If you can prove this, you have an O(n) solution.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>Arrays allow O(1) random access. Python lists are dynamic arrays.</li>
+    <li>The <strong>two-pointer</strong> technique uses two indices to process a sorted array or string from both ends simultaneously.</li>
+    <li>The <strong>sliding window</strong> technique maintains a contiguous window of elements, expanding right and shrinking left as needed.</li>
+    <li><strong>Kadane's algorithm</strong> finds the maximum subarray sum in O(n) with a single pass decision at each element.</li>
+    <li><strong>Prefix products</strong> let you answer product queries about sub-ranges without division.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 3.1 (Beginner)</strong>
+      <p>Write a function that checks whether a string is a palindrome using the two-pointer technique. Do not use Python's slicing shortcut <code>s == s[::-1]</code>.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 3.2 (Intermediate)</strong>
+      <p>Given an array of integers and a target sum, find all pairs of indices (i, j) such that <code>nums[i] + nums[j] == target</code> and <code>i != j</code>. The array is sorted. Solve this with two pointers in O(n).</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 3.3 (Advanced)</strong>
+      <p>Given a string <code>s</code> and a string <code>t</code>, find the minimum window substring of <code>s</code> that contains all characters of <code>t</code>. This is the classic "Minimum Window Substring" problem. Use a variable-size sliding window with a frequency map.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 4
+     ============================================================ -->
+<section id="ch4" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 1 — Foundations</div>
+  <div class="chapter-number">04</div>
+  <h1 class="chapter-title">Hashing — The Magic of O(1) Lookup</h1>
+  <p class="chapter-intro">What if you could find any piece of information in constant time, regardless of how much data you have? That is exactly what hashing gives you — and it is one of the most powerful ideas in all of computer science.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Library Index Analogy</h2>
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Imagine a library with a million books. If the books are just stacked randomly, finding the one you want means looking through all of them — O(n). But what if the library has a magical index card system: you look up the book's title, and the card instantly tells you the exact shelf and position? That is a <strong>hash map</strong>. The "magical card" is the hash function, which converts a key (the title) into an index (the shelf position) in near-constant time.</p>
+</div>
+
+<h2>How Hash Maps Work (Under the Hood)</h2>
+<p>A <strong>hash map</strong> (called a <code>dict</code> in Python) stores key-value pairs. Internally, it works like this:</p>
+<ol>
+  <li>You call a <strong>hash function</strong> on the key. This function converts the key into an integer — its "hash value."</li>
+  <li>That integer is mapped to an index in an internal array using modulo arithmetic.</li>
+  <li>The key-value pair is stored at that index.</li>
+  <li>To look up a key later, you run the same hash function, go directly to that index, and retrieve the value.</li>
+</ol>
+<p>Because this is just arithmetic (not searching), it takes O(1) on average.</p>
+
+<h2>What About Collisions?</h2>
+<p>Sometimes two different keys produce the same hash value — this is called a <strong>collision</strong>. Python handles this using a technique called <strong>open addressing</strong>: if the target slot is taken, it probes nearby slots until it finds an empty one. As long as the hash table is not too full, this keeps operations near O(1). In the rare worst case, all keys collide into the same slot, and lookup degrades to O(n) — but good hash functions and proper load-factor management make this extremely unlikely in practice.</p>
+
+<div class="callout callout-note">
+  <div class="callout-title">📘 Note</div>
+  <p>A <strong>hash set</strong> (<code>set</code> in Python) is just a hash map where you only care about the keys, not the values. It supports O(1) average add, remove, and membership test. Use a set when you need to answer "have I seen this before?" and a map when you need to store associated data.</p>
+</div>
+
+<h2>The Frequency Counting Pattern</h2>
+<p>One of the most common uses of hash maps is counting how often each element appears. This single pattern solves an enormous variety of problems.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Frequency Counter Template <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+<span class="kw">def</span> <span class="fn">frequency_template</span>(items: <span class="bi">list</span>) -> <span class="bi">dict</span>:
+    freq = {}
+    <span class="kw">for</span> item <span class="kw">in</span> items:
+        freq[item] = freq.get(item, <span class="nu">0</span>) + <span class="nu">1</span>
+    <span class="kw">return</span> freq
+
+<span class="cm"># Or use Python's built-in Counter (same result, cleaner):</span>
+<span class="kw">def</span> <span class="fn">frequency_counter</span>(items: <span class="bi">list</span>) -> Counter:
+    <span class="kw">return</span> Counter(items)</code></pre>
+</div>
+
+<!-- PROBLEM 4.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 4.1 — Two Sum</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array <code>nums</code> and an integer <code>target</code>, return the indices of the two numbers that add up to <code>target</code>. Exactly one solution exists.</p>
+      <p><strong>Example:</strong> Input: <code>nums=[2,7,11,15], target=9</code> → Output: <code>[0,1]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>For each number <code>x</code>, we need to find its "complement" — the value <code>target - x</code>. Instead of searching the array for the complement (O(n) per element), we store each number we have seen in a hash map. Then the lookup is O(1).</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">two_sum</span>(nums: <span class="bi">list</span>[<span class="bi">int</span>], target: <span class="bi">int</span>) -> <span class="bi">list</span>[<span class="bi">int</span>]:
+    seen = {}  <span class="cm"># maps value → index</span>
+    <span class="kw">for</span> i, num <span class="kw">in</span> <span class="bi">enumerate</span>(nums):
+        complement = target - num
+        <span class="kw">if</span> complement <span class="kw">in</span> seen:
+            <span class="kw">return</span> [seen[complement], i]  <span class="cm"># found the pair</span>
+        seen[num] = i  <span class="cm"># store this number for future lookups</span>
+    <span class="kw">return</span> []  <span class="cm"># no solution found</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Dry Run</div>
+      <div class="dry-run"><pre>
+nums = [2, 7, 11, 15], target = 9
+
+i=0: num=2,  complement=7.  seen={}     → 7 not in seen. Store {2:0}
+i=1: num=7,  complement=2.  seen={2:0}  → 2 IS in seen at index 0!
+      Return [0, 1] ✓
+</pre></div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Single pass, each lookup is O(1). <strong>Space: O(n)</strong> — The map stores at most n entries.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The "store what you have seen" pattern turns a two-nested-loop O(n²) search into a single O(n) pass. This idea appears in dozens of interview problems.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 4.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 4.2 — Group Anagrams</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array of strings, group the anagrams together. You may return the answer in any order.</p>
+      <p><strong>Example:</strong> Input: <code>["eat","tea","tan","ate","nat","bat"]</code> → Output: <code>[["eat","tea","ate"],["tan","nat"],["bat"]]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Two words are anagrams if and only if they have the same characters in the same frequencies. The sorted version of any anagram is identical. Use the sorted string as a dictionary key, grouping all words that share the same key.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+
+<span class="kw">def</span> <span class="fn">group_anagrams</span>(strs: <span class="bi">list</span>[<span class="bi">str</span>]) -> <span class="bi">list</span>[<span class="bi">list</span>[<span class="bi">str</span>]]:
+    groups = defaultdict(<span class="bi">list</span>)  <span class="cm"># key: sorted word, value: list of anagrams</span>
+    <span class="kw">for</span> word <span class="kw">in</span> strs:
+        key = <span class="bi">tuple</span>(<span class="bi">sorted</span>(word))  <span class="cm"># "eat" → ('a','e','t')</span>
+        groups[key].append(word)
+    <span class="kw">return</span> <span class="bi">list</span>(groups.values())</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n × k log k)</strong> where k is the average word length (sorting each word costs k log k). <strong>Space: O(n × k)</strong> — storing all words in the map.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Finding a canonical form (like sorting) is a powerful technique for grouping equivalent items. Any equivalence class can be used as a hash key.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 4.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 4.3 — Top K Frequent Elements</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return the <code>k</code> most frequent elements. Order does not matter.</p>
+      <p><strong>Example:</strong> Input: <code>nums=[1,1,1,2,2,3], k=2</code> → Output: <code>[1,2]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Count frequencies with a hash map, then use a bucket sort trick: create an array where index <code>i</code> holds all numbers that appeared exactly <code>i</code> times. Walk from the highest bucket down, collecting elements until you have k.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+<span class="kw">def</span> <span class="fn">top_k_frequent</span>(nums: <span class="bi">list</span>[<span class="bi">int</span>], k: <span class="bi">int</span>) -> <span class="bi">list</span>[<span class="bi">int</span>]:
+    freq = Counter(nums)           <span class="cm"># {value: count}</span>
+    <span class="cm"># Bucket: index = frequency, value = list of numbers with that freq</span>
+    buckets = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(nums) + <span class="nu">1</span>)]
+    <span class="kw">for</span> num, count <span class="kw">in</span> freq.items():
+        buckets[count].append(num)
+
+    result = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(buckets) - <span class="nu">1</span>, <span class="nu">0</span>, -<span class="nu">1</span>):  <span class="cm"># walk from high freq to low</span>
+        <span class="kw">for</span> num <span class="kw">in</span> buckets[i]:
+            result.append(num)
+            <span class="kw">if</span> <span class="bi">len</span>(result) == k:
+                <span class="kw">return</span> result
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Counting is O(n), bucketing is O(n), collecting is O(n). No sorting needed. <strong>Space: O(n)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Bucket sort sidesteps comparison-based sorting when the "keys" (frequencies) are bounded integers. Recognise when you can trade a sort for a bucket.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 4.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 4.4 — Valid Anagram</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given two strings <code>s</code> and <code>t</code>, return <code>True</code> if <code>t</code> is an anagram of <code>s</code>, and <code>False</code> otherwise.</p>
+      <p><strong>Example:</strong> <code>s="anagram", t="nagaram"</code> → <code>True</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+<span class="kw">def</span> <span class="fn">is_anagram</span>(s: <span class="bi">str</span>, t: <span class="bi">str</span>) -> <span class="bi">bool</span>:
+    <span class="cm"># Two strings are anagrams ↔ their character frequency maps are equal</span>
+    <span class="kw">return</span> Counter(s) == Counter(t)</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> where n is the length of the strings. <strong>Space: O(k)</strong> where k is the size of the character set (at most 26 for lowercase English).</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 4.5 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 4.5 — Longest Consecutive Sequence</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an unsorted integer array <code>nums</code>, find the length of the longest consecutive elements sequence. Must run in O(n).</p>
+      <p><strong>Example:</strong> Input: <code>[100,4,200,1,3,2]</code> → Output: <code>4</code> (sequence: <code>1,2,3,4</code>)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Put all numbers into a set for O(1) lookup. Then, for each number, check if it is the <em>start</em> of a sequence (i.e., <code>num - 1</code> is not in the set). If it is the start, count how far the sequence extends. Only starts trigger the inner count — so each number is visited at most twice total.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">longest_consecutive</span>(nums: <span class="bi">list</span>[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    num_set = <span class="bi">set</span>(nums)   <span class="cm"># O(1) membership check</span>
+    best = <span class="nu">0</span>
+
+    <span class="kw">for</span> num <span class="kw">in</span> num_set:
+        <span class="kw">if</span> num - <span class="nu">1</span> <span class="kw">not</span> <span class="kw">in</span> num_set:   <span class="cm"># only start sequences from their beginning</span>
+            length = <span class="nu">1</span>
+            <span class="kw">while</span> num + length <span class="kw">in</span> num_set:
+                length += <span class="nu">1</span>
+            best = <span class="bi">max</span>(best, length)
+
+    <span class="kw">return</span> best</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Each number triggers the inner while loop at most once (only from sequence starts). <strong>Space: O(n)</strong> — The set stores all n numbers.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>When you need a sequence to be contiguous but the array is unsorted, a set is your best friend. The key insight is to only start counting from the beginning of each sequence — avoiding redundant work.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout callout-mistake">
+  <div class="callout-title">🔴 Common Beginner Mistake</div>
+  <p>Beginners often forget that hash maps and sets have O(1) <em>average</em> case, not O(1) <em>guaranteed</em>. In practice, Python's built-in <code>dict</code> and <code>set</code> are extremely well-optimised and you will almost never encounter the worst case. But in theoretical discussions, be precise: say "O(1) average" rather than just "O(1)."</p>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A <strong>hash map</strong> stores key-value pairs with O(1) average lookup, insert, and delete.</li>
+    <li>A <strong>hash set</strong> is a hash map with no values — for O(1) membership testing.</li>
+    <li>The <strong>frequency counting pattern</strong> turns many O(n²) search problems into O(n) ones.</li>
+    <li>The <strong>"store what you've seen"</strong> pattern (as in Two Sum) is one of the most powerful interview techniques.</li>
+    <li>Use a <strong>canonical form</strong> (like sorted order) as a hash key when grouping equivalent items.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 4.1 (Beginner)</strong>
+      <p>Write a function that takes a string and returns the first non-repeating character. For example, given <code>"leetcode"</code>, return <code>'l'</code>. Use a hash map. What is the time and space complexity?</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 4.2 (Intermediate)</strong>
+      <p>Given a list of integers, find all pairs <code>(i, j)</code> such that <code>nums[i] + nums[j] == 0</code> (the sum is zero). Return unique pairs only. This is a variant of Two Sum — think about how to handle duplicates in your hash map approach.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 4.3 (Advanced)</strong>
+      <p>Implement a function that, given two arrays A and B, finds the intersection — the elements that appear in both. Each element in the result should appear only once. Solve it in O(n + m) time using sets. Then consider: what if the arrays are sorted? Can you do it with O(1) space using two pointers?</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>

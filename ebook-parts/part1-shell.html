@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Mastery — A Complete Study Book for AI Engineers</title>
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES — DUAL THEME
+   ============================================================ */
+:root {
+  --bg:          #FDFBF7;
+  --bg-alt:      #F5F2EB;
+  --surface:     #FFFFFF;
+  --surface2:    #F0EDE4;
+  --text:        #1A1A2E;
+  --text-muted:  #5A5A7A;
+  --accent:      #C9A84C;
+  --accent-dark: #A8883A;
+  --accent-light:#F0E0A0;
+  --border:      #E0DDD4;
+  --code-bg:     #1E1E2E;
+  --code-text:   #CDD6F4;
+  --inline-code-bg: #FFF3CD;
+  --inline-code-text: #7C4A00;
+  --sidebar-bg:  #F5F2EB;
+  --sidebar-w:   280px;
+  --note-bg:     #EBF4FF;
+  --note-border: #3B82F6;
+  --warn-bg:     #FFF7ED;
+  --warn-border: #F97316;
+  --tip-bg:      #F0FDF4;
+  --tip-border:  #22C55E;
+  --mistake-bg:  #FEF2F2;
+  --mistake-border:#EF4444;
+  --analogy-bg:  #FAF5FF;
+  --analogy-border:#A855F7;
+  --shadow:      0 2px 12px rgba(0,0,0,0.08);
+  --radius:      10px;
+  --transition:  0.22s ease;
+}
+[data-theme="dark"] {
+  --bg:          #12121A;
+  --bg-alt:      #1A1A28;
+  --surface:     #1E1E2E;
+  --surface2:    #252535;
+  --text:        #E8E6E0;
+  --text-muted:  #9A9AB0;
+  --accent:      #C9A84C;
+  --accent-dark: #E8C46A;
+  --accent-light:#3A3010;
+  --border:      #2E2E42;
+  --code-bg:     #0D0D17;
+  --code-text:   #CDD6F4;
+  --inline-code-bg: #2A2408;
+  --inline-code-text:#F0C060;
+  --sidebar-bg:  #1A1A28;
+  --note-bg:     #0A1628;
+  --note-border: #3B82F6;
+  --warn-bg:     #1E1008;
+  --warn-border: #F97316;
+  --tip-bg:      #061410;
+  --tip-border:  #22C55E;
+  --mistake-bg:  #1E0808;
+  --mistake-border:#EF4444;
+  --analogy-bg:  #160A20;
+  --analogy-border:#A855F7;
+  --shadow:      0 2px 16px rgba(0,0,0,0.4);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: Georgia, 'Times New Roman', 'Noto Serif', serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  transition: background var(--transition), color var(--transition);
+}
+a { color: var(--accent-dark); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--accent); text-decoration: underline; }
+
+/* ============================================================
+   READING PROGRESS BAR
+   ============================================================ */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 4px;
+  width: 0%; background: var(--accent);
+  z-index: 9999; transition: width 0.1s linear;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+#layout { display: flex; min-height: 100vh; }
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  position: fixed; top: 0; left: 0; bottom: 0;
+  overflow-y: auto; overflow-x: hidden;
+  z-index: 100;
+  transition: transform var(--transition), background var(--transition);
+  display: flex; flex-direction: column;
+}
+#sidebar-header {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--sidebar-bg);
+  z-index: 2;
+}
+#sidebar-header .book-title {
+  font-size: 0.82rem; font-weight: bold;
+  color: var(--accent-dark); letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+#sidebar-header .book-subtitle {
+  font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+#toc { padding: 12px 0 40px; list-style: none; }
+#toc li a {
+  display: block; padding: 6px 20px 6px 20px;
+  font-size: 0.78rem; color: var(--text-muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.4; transition: all var(--transition);
+  border-left: 3px solid transparent;
+}
+#toc li a:hover {
+  color: var(--text); background: var(--surface2);
+  text-decoration: none; border-left-color: var(--accent);
+}
+#toc li a.active {
+  color: var(--accent-dark); font-weight: 600;
+  border-left-color: var(--accent); background: var(--accent-light);
+}
+#toc li.toc-part { margin-top: 14px; }
+#toc li.toc-part > span {
+  display: block; padding: 4px 20px;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent-dark);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+#toc li.toc-h3 > a { padding-left: 34px; font-size: 0.74rem; }
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1; min-width: 0;
+  padding: 0 0 80px;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+#topbar {
+  position: sticky; top: 0; z-index: 90;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 10px 32px; gap: 12px;
+  backdrop-filter: blur(8px);
+  transition: background var(--transition);
+}
+#hamburger {
+  display: none; background: none; border: none;
+  cursor: pointer; padding: 4px; color: var(--text);
+}
+#hamburger svg { width: 24px; height: 24px; }
+#theme-toggle {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; cursor: pointer;
+  padding: 6px 14px; font-size: 0.8rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text); transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+#theme-toggle:hover { background: var(--surface); border-color: var(--accent); }
+
+/* ============================================================
+   CHAPTER HERO
+   ============================================================ */
+.chapter-hero {
+  padding: 60px 64px 40px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg) 60%, var(--bg-alt));
+}
+.part-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent-dark);
+  margin-bottom: 8px;
+}
+.chapter-number {
+  font-size: 5rem; font-weight: 900; line-height: 1;
+  color: var(--accent-light); margin-bottom: 0;
+  font-family: Georgia, serif;
+  -webkit-text-stroke: 2px var(--accent);
+}
+[data-theme="dark"] .chapter-number { color: #2A2408; }
+.chapter-title {
+  font-size: 2.2rem; font-weight: bold; color: var(--text);
+  margin-top: 8px; margin-bottom: 16px; line-height: 1.3;
+}
+.chapter-intro {
+  font-size: 1.05rem; color: var(--text-muted);
+  max-width: 680px; line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.chapter-body {
+  padding: 48px 64px;
+  max-width: 860px;
+}
+.chapter-body h2 {
+  font-size: 1.6rem; color: var(--text); margin: 48px 0 16px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--accent-light);
+}
+[data-theme="dark"] .chapter-body h2 { border-bottom-color: var(--accent-dark); }
+.chapter-body h3 {
+  font-size: 1.25rem; color: var(--text); margin: 36px 0 12px;
+}
+.chapter-body h4 {
+  font-size: 1.05rem; color: var(--text-muted); margin: 24px 0 8px;
+  font-style: italic;
+}
+.chapter-body p { margin-bottom: 1.1em; }
+.chapter-body ul, .chapter-body ol {
+  padding-left: 1.8em; margin-bottom: 1.1em;
+}
+.chapter-body li { margin-bottom: 0.4em; }
+.chapter-body strong { color: var(--accent-dark); }
+
+/* ============================================================
+   INLINE CODE
+   ============================================================ */
+code {
+  background: var(--inline-code-bg);
+  color: var(--inline-code-text);
+  padding: 1px 6px; border-radius: 4px;
+  font-family: 'Courier New', 'Lucida Console', monospace;
+  font-size: 0.88em;
+}
+
+/* ============================================================
+   CODE BLOCKS
+   ============================================================ */
+.code-wrapper {
+  position: relative; margin: 28px 0;
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.code-label {
+  background: #2A2A3E; color: #888; font-size: 0.72rem;
+  padding: 6px 16px; letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.copy-btn {
+  background: none; border: 1px solid #555; border-radius: 4px;
+  color: #aaa; font-size: 0.7rem; padding: 2px 10px;
+  cursor: pointer; transition: all 0.2s; font-family: sans-serif;
+}
+.copy-btn:hover { background: #3A3A50; color: #fff; }
+.copy-btn.copied { color: #4ade80; border-color: #4ade80; }
+pre {
+  background: var(--code-bg); color: var(--code-text);
+  padding: 20px 24px; overflow-x: auto; margin: 0;
+  font-family: 'Courier New', 'Lucida Console', monospace;
+  font-size: 0.88rem; line-height: 1.7;
+}
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+/* SYNTAX HIGHLIGHTING */
+.kw  { color: #CBA6F7; }  /* keywords: def, return, if, for, class */
+.fn  { color: #89B4FA; }  /* function names */
+.st  { color: #A6E3A1; }  /* strings */
+.nu  { color: #FAB387; }  /* numbers */
+.cm  { color: #6C7086; font-style: italic; }  /* comments */
+.op  { color: #89DCEB; }  /* operators */
+.bi  { color: #F38BA8; }  /* builtins */
+.dec { color: #F9E2AF; }  /* decorators / special */
+
+/* ============================================================
+   CALLOUT BOXES
+   ============================================================ */
+.callout {
+  border-radius: var(--radius); padding: 18px 22px;
+  margin: 28px 0; border-left: 5px solid;
+}
+.callout .callout-title {
+  font-weight: 700; font-size: 0.82rem; letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex; align-items: center; gap: 6px;
+}
+.callout-note    { background: var(--note-bg);    border-color: var(--note-border); }
+.callout-note    .callout-title { color: var(--note-border); }
+.callout-warn    { background: var(--warn-bg);    border-color: var(--warn-border); }
+.callout-warn    .callout-title { color: var(--warn-border); }
+.callout-tip     { background: var(--tip-bg);     border-color: var(--tip-border); }
+.callout-tip     .callout-title { color: var(--tip-border); }
+.callout-mistake { background: var(--mistake-bg); border-color: var(--mistake-border); }
+.callout-mistake .callout-title { color: var(--mistake-border); }
+.callout-analogy { background: var(--analogy-bg); border-color: var(--analogy-border); }
+.callout-analogy .callout-title { color: var(--analogy-border); }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrap { overflow-x: auto; margin: 24px 0; border-radius: var(--radius); }
+table {
+  width: 100%; border-collapse: collapse;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.88rem;
+}
+th {
+  background: var(--surface2); color: var(--text);
+  padding: 10px 16px; text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 9px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+tr:hover td { background: var(--surface2); }
+
+/* ============================================================
+   PROBLEM CARD
+   ============================================================ */
+.problem-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin: 40px 0;
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.problem-header {
+  background: var(--surface2); padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.problem-title { font-weight: 700; font-size: 1.05rem; color: var(--text); }
+.badge {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+  padding: 3px 10px; border-radius: 20px; text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.badge-beginner     { background: #D1FAE5; color: #065F46; }
+.badge-intermediate { background: #FEF3C7; color: #92400E; }
+.badge-advanced     { background: #FEE2E2; color: #991B1B; }
+[data-theme="dark"] .badge-beginner     { background: #062016; color: #6EE7B7; }
+[data-theme="dark"] .badge-intermediate { background: #1C1208; color: #FCD34D; }
+[data-theme="dark"] .badge-advanced     { background: #1C0808; color: #FCA5A5; }
+.problem-body { padding: 24px; }
+.problem-section { margin-bottom: 24px; }
+.problem-section-title {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent-dark);
+  margin-bottom: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================================
+   DRY RUN TABLE
+   ============================================================ */
+.dry-run {
+  background: var(--code-bg); border-radius: 6px;
+  padding: 16px 20px; overflow-x: auto; margin: 12px 0;
+}
+.dry-run pre {
+  background: transparent; padding: 0; font-size: 0.83rem;
+}
+
+/* ============================================================
+   CHAPTER SUMMARY
+   ============================================================ */
+.chapter-summary {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px 32px; margin: 48px 0;
+  box-shadow: var(--shadow);
+}
+.chapter-summary h3 {
+  color: var(--accent-dark); margin-bottom: 16px;
+  font-size: 1.1rem; margin-top: 0;
+}
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: 5px 0 5px 26px; position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.92rem; color: var(--text);
+}
+.checklist li::before {
+  content: "✓"; position: absolute; left: 0;
+  color: var(--tip-border); font-weight: bold;
+}
+
+/* ============================================================
+   TRY IT YOURSELF (COLLAPSIBLE)
+   ============================================================ */
+.try-section {
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: var(--radius); margin: 32px 0; overflow: hidden;
+}
+.try-toggle {
+  width: 100%; background: none; border: none; cursor: pointer;
+  padding: 16px 24px; text-align: left;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.9rem; font-weight: 700; color: var(--accent-dark);
+  display: flex; justify-content: space-between; align-items: center;
+  transition: background var(--transition);
+}
+.try-toggle:hover { background: var(--surface2); }
+.try-toggle .toggle-icon { font-size: 1.1rem; transition: transform 0.2s; }
+.try-toggle.open .toggle-icon { transform: rotate(90deg); }
+.try-content { display: none; padding: 20px 24px 24px; border-top: 1px solid var(--border); }
+.try-content.open { display: block; }
+.try-problem { margin-bottom: 20px; }
+.try-problem strong { color: var(--text); display: block; margin-bottom: 6px; }
+.try-problem p { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.chapter-divider {
+  border: none; border-top: 2px solid var(--border);
+  margin: 60px 0;
+}
+.part-divider {
+  text-align: center; padding: 40px 32px; background: var(--bg-alt);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+.part-divider .part-number {
+  font-size: 3.5rem; font-weight: 900; color: var(--accent);
+  display: block; line-height: 1;
+}
+.part-divider .part-title {
+  font-size: 1.4rem; color: var(--text); margin-top: 8px;
+}
+.part-divider .part-desc {
+  font-size: 0.92rem; color: var(--text-muted); margin-top: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ============================================================
+   COMPLEXITY TABLE
+   ============================================================ */
+.complexity-table th { background: var(--accent-light); }
+[data-theme="dark"] .complexity-table th { background: var(--accent-dark); color: #12121A; }
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+#overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 90;
+}
+@media (max-width: 768px) {
+  #sidebar {
+    transform: translateX(-100%);
+  }
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  #overlay.open { display: block; }
+  #main { margin-left: 0; }
+  #hamburger { display: block; }
+  .chapter-hero { padding: 36px 24px 28px; }
+  .chapter-title { font-size: 1.6rem; }
+  .chapter-number { font-size: 3.5rem; }
+  .chapter-body { padding: 28px 24px; }
+  #topbar { padding: 10px 16px; }
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ============================================================
+   PATTERN GRID (Chapter 17)
+   ============================================================ */
+.pattern-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px; margin: 28px 0;
+}
+.pattern-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px;
+  border-top: 4px solid var(--accent);
+  transition: box-shadow var(--transition);
+}
+.pattern-card:hover { box-shadow: var(--shadow); }
+.pattern-card h4 { color: var(--accent-dark); margin: 0 0 8px; font-size: 0.95rem; }
+.pattern-card .trigger {
+  font-size: 0.76rem; color: var(--text-muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  margin-top: 8px;
+}
+.pattern-card .trigger strong { color: var(--accent-dark); }
+
+/* ============================================================
+   CONFIDENCE TRACKER
+   ============================================================ */
+.confidence-table td:first-child { font-weight: 600; }
+.star-cell { color: var(--accent); letter-spacing: 2px; }
+
+/* COVER PAGE */
+#cover {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 92vh; text-align: center;
+  padding: 60px 32px;
+  background: linear-gradient(160deg, var(--bg) 30%, var(--bg-alt));
+  border-bottom: 2px solid var(--border);
+}
+#cover .cover-icon { font-size: 4rem; margin-bottom: 20px; }
+#cover .cover-title {
+  font-size: 3rem; font-weight: 900; color: var(--text);
+  line-height: 1.2; max-width: 700px;
+}
+#cover .cover-sub {
+  font-size: 1.15rem; color: var(--text-muted); margin: 16px 0 32px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  max-width: 560px;
+}
+#cover .cover-badge {
+  background: var(--accent); color: #1A1A2E; padding: 8px 24px;
+  border-radius: 24px; font-weight: 700; font-size: 0.9rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+#cover .cover-meta {
+  margin-top: 48px; font-size: 0.82rem; color: var(--text-muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<div id="overlay"></div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div id="sidebar-header">
+    <div class="book-title">DSA Mastery</div>
+    <div class="book-subtitle">For AI Engineer Interviews</div>
+  </div>
+  <ul id="toc">
+    <!-- Auto-generated by JS + manually seeded below -->
+    <li><a href="#cover-page">📖 Cover &amp; Introduction</a></li>
+    <li class="toc-part"><span>Part 1 — Foundations</span></li>
+    <li><a href="#ch1">Chapter 1: What is DSA?</a></li>
+    <li><a href="#ch2">Chapter 2: Big-O Notation</a></li>
+    <li><a href="#ch3">Chapter 3: Arrays &amp; Strings</a></li>
+    <li><a href="#ch4">Chapter 4: Hashing</a></li>
+    <li class="toc-part"><span>Part 2 — Linear Structures</span></li>
+    <li><a href="#ch5">Chapter 5: Linked Lists</a></li>
+    <li><a href="#ch6">Chapter 6: Stacks</a></li>
+    <li><a href="#ch7">Chapter 7: Queues &amp; Deques</a></li>
+    <li class="toc-part"><span>Part 3 — Non-Linear Structures</span></li>
+    <li><a href="#ch8">Chapter 8: Trees &amp; Binary Trees</a></li>
+    <li><a href="#ch9">Chapter 9: Binary Search Trees</a></li>
+    <li><a href="#ch10">Chapter 10: Heaps &amp; Priority Queues</a></li>
+    <li><a href="#ch11">Chapter 11: Graphs</a></li>
+    <li class="toc-part"><span>Part 4 — Algorithms</span></li>
+    <li><a href="#ch12">Chapter 12: Sorting Algorithms</a></li>
+    <li><a href="#ch13">Chapter 13: Binary Search</a></li>
+    <li><a href="#ch14">Chapter 14: Recursion &amp; Backtracking</a></li>
+    <li><a href="#ch15">Chapter 15: Dynamic Programming</a></li>
+    <li class="toc-part"><span>Part 5 — Interview Prep</span></li>
+    <li><a href="#ch16">Chapter 16: Problem-Solving Framework</a></li>
+    <li><a href="#ch17">Chapter 17: Pattern Recognition Guide</a></li>
+    <li><a href="#ch18">Chapter 18: Final Practice Set</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN LAYOUT -->
+<div id="layout">
+  <div id="main">
+    <!-- TOP BAR -->
+    <div id="topbar">
+      <button id="hamburger" aria-label="Open menu">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <button id="theme-toggle">&#9788; Light</button>
+    </div>
+
+    <!-- ALL CHAPTER CONTENT GOES HERE -->
+    <!-- CHAPTERS_PLACEHOLDER -->
+
+  </div><!-- #main -->
+</div><!-- #layout -->
+
+<script>
+// ============================================================
+// THEME TOGGLE
+// ============================================================
+const themeBtn = document.getElementById('theme-toggle');
+const html = document.documentElement;
+function applyTheme(t) {
+  html.setAttribute('data-theme', t);
+  themeBtn.textContent = t === 'dark' ? '☀ Light' : '☾ Dark';
+  localStorage.setItem('ebook-theme', t);
+}
+applyTheme(localStorage.getItem('ebook-theme') || 'light');
+themeBtn.addEventListener('click', () => {
+  applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+// ============================================================
+// MOBILE HAMBURGER
+// ============================================================
+const sidebar  = document.getElementById('sidebar');
+const overlay  = document.getElementById('overlay');
+const hamburger = document.getElementById('hamburger');
+hamburger.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+});
+
+// ============================================================
+// READING PROGRESS BAR
+// ============================================================
+const bar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+});
+
+// ============================================================
+// ACTIVE TOC HIGHLIGHT (IntersectionObserver)
+// ============================================================
+const tocLinks = document.querySelectorAll('#toc a');
+const sections = document.querySelectorAll('[data-section]');
+if (sections.length && tocLinks.length) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const id = entry.target.getAttribute('id');
+        const link = document.querySelector('#toc a[href="#' + id + '"]');
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+}
+
+// ============================================================
+// COPY CODE BUTTONS
+// ============================================================
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const pre = btn.closest('.code-wrapper').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+});
+
+// ============================================================
+// COLLAPSIBLE TRY IT YOURSELF
+// ============================================================
+document.querySelectorAll('.try-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const content = btn.nextElementSibling;
+    const icon = btn.querySelector('.toggle-icon');
+    btn.classList.toggle('open');
+    content.classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>

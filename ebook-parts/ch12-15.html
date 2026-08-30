@@ -1,0 +1,940 @@
+<!-- ============================================================
+     PART 4 DIVIDER
+     ============================================================ -->
+<div class="part-divider">
+  <span class="part-number">IV</span>
+  <div class="part-title">Algorithms</div>
+  <div class="part-desc">Sorting, searching, recursion, and the art of breaking problems down</div>
+</div>
+
+<!-- ============================================================
+     CHAPTER 12 — SORTING ALGORITHMS
+     ============================================================ -->
+<section id="ch12" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 4 — Algorithms</div>
+  <div class="chapter-number">12</div>
+  <h1 class="chapter-title">Sorting Algorithms</h1>
+  <p class="chapter-intro">Sorting is one of the most studied problems in computer science — and for good reason. A sorted array unlocks binary search, simplifies duplicate detection, and is a prerequisite to countless other algorithms. Understanding how sorting works at a deep level reveals profound ideas about algorithmic design.</p>
+</div>
+<div class="chapter-body">
+
+<h2>Why Learn Multiple Sorting Algorithms?</h2>
+<p>Python's built-in <code>sorted()</code> uses Timsort (a hybrid of merge sort and insertion sort) and runs in O(n log n). In practice you will rarely need to implement a sort from scratch. But interviewers ask about sorting to test whether you understand <em>how</em> algorithms make trade-offs between time, space, and best/worst-case behaviour.</p>
+
+<div class="table-wrap">
+<table class="complexity-table">
+  <thead><tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable?</th></tr></thead>
+  <tbody>
+    <tr><td>Bubble Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+    <tr><td>Selection Sort</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>No</td></tr>
+    <tr><td>Insertion Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+    <tr><td>Merge Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+    <tr><td>Quick Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>No</td></tr>
+    <tr><td>Heap Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>No</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Merge Sort — The Divide-and-Conquer Classic</h2>
+<p>Merge Sort splits the array in half, recursively sorts each half, then merges the two sorted halves. The key insight is that merging two sorted lists takes O(n). The recursion depth is O(log n). Total: O(n log n) — guaranteed, regardless of input.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Merge Sort <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">merge_sort</span>(arr: list[<span class="bi">int</span>]) -> list[<span class="bi">int</span>]:
+    <span class="kw">if</span> <span class="bi">len</span>(arr) <= <span class="nu">1</span>:
+        <span class="kw">return</span> arr   <span class="cm"># base case: single element is already sorted</span>
+
+    mid   = <span class="bi">len</span>(arr) // <span class="nu">2</span>
+    left  = merge_sort(arr[:mid])    <span class="cm"># sort left half</span>
+    right = merge_sort(arr[mid:])    <span class="cm"># sort right half</span>
+
+    <span class="cm"># Merge two sorted halves</span>
+    result = []
+    i = j = <span class="nu">0</span>
+    <span class="kw">while</span> i < <span class="bi">len</span>(left) <span class="kw">and</span> j < <span class="bi">len</span>(right):
+        <span class="kw">if</span> left[i] <= right[j]:
+            result.append(left[i]);  i += <span class="nu">1</span>
+        <span class="kw">else</span>:
+            result.append(right[j]); j += <span class="nu">1</span>
+    result.extend(left[i:])
+    result.extend(right[j:])
+    <span class="kw">return</span> result</code></pre>
+</div>
+
+<h2>Quick Sort — The In-Place Speed Demon</h2>
+<p>Quick Sort picks a pivot, partitions the array so everything smaller is to the pivot's left and everything larger is to its right, then recursively sorts both sides. With a good pivot choice (like randomised), the average case is O(n log n) with O(log n) space — much better in practice than merge sort's O(n) extra space.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Quick Sort <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">import</span> random
+
+<span class="kw">def</span> <span class="fn">quick_sort</span>(arr: list[<span class="bi">int</span>], lo: <span class="bi">int</span>, hi: <span class="bi">int</span>) -> <span class="kw">None</span>:
+    <span class="kw">if</span> lo >= hi: <span class="kw">return</span>   <span class="cm"># base case</span>
+
+    <span class="cm"># Randomise pivot to avoid O(n²) on sorted input</span>
+    pivot_idx = random.randint(lo, hi)
+    arr[pivot_idx], arr[hi] = arr[hi], arr[pivot_idx]
+    pivot = arr[hi]
+
+    i = lo - <span class="nu">1</span>  <span class="cm"># pointer to last element <= pivot</span>
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="bi">range</span>(lo, hi):
+        <span class="kw">if</span> arr[j] <= pivot:
+            i += <span class="nu">1</span>
+            arr[i], arr[j] = arr[j], arr[i]
+
+    arr[i + <span class="nu">1</span>], arr[hi] = arr[hi], arr[i + <span class="nu">1</span>]   <span class="cm"># place pivot</span>
+    pivot_pos = i + <span class="nu">1</span>
+
+    quick_sort(arr, lo,           pivot_pos - <span class="nu">1</span>)
+    quick_sort(arr, pivot_pos + <span class="nu">1</span>, hi)</code></pre>
+</div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">🟢 Interview Tip</div>
+  <p>When an interviewer asks you to sort something, clarify whether Python's <code>sorted()</code> is allowed. In most interviews it is, and you should use it. The sorting questions that do appear are usually about applying sorting cleverly (e.g., "sort meeting start times to find overlaps") rather than reimplementing a sort from scratch.</p>
+</div>
+
+<!-- PROBLEM 12.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 12.1 — Merge Intervals</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a list of intervals <code>[start, end]</code>, merge all overlapping intervals and return the result.</p>
+      <p><strong>Example:</strong> <code>[[1,3],[2,6],[8,10],[15,18]]</code> → <code>[[1,6],[8,10],[15,18]]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Sort intervals by start time. Then scan: if the current interval overlaps the last merged interval (i.e., its start ≤ last end), extend the last merged interval's end. Otherwise, add the current interval as a new merged interval.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">merge_intervals</span>(intervals: list[list[<span class="bi">int</span>]]) -> list[list[<span class="bi">int</span>]]:
+    intervals.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: x[<span class="nu">0</span>])  <span class="cm"># sort by start time</span>
+    merged = [intervals[<span class="nu">0</span>]]
+
+    <span class="kw">for</span> start, end <span class="kw">in</span> intervals[<span class="nu">1</span>:]:
+        <span class="kw">if</span> start <= merged[-<span class="nu">1</span>][<span class="nu">1</span>]:         <span class="cm"># overlaps last merged interval</span>
+            merged[-<span class="nu">1</span>][<span class="nu">1</span>] = <span class="bi">max</span>(merged[-<span class="nu">1</span>][<span class="nu">1</span>], end)  <span class="cm"># extend</span>
+        <span class="kw">else</span>:
+            merged.append([start, end])     <span class="cm"># new separate interval</span>
+    <span class="kw">return</span> merged</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n log n)</strong> — dominated by sort. <strong>Space: O(n)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 12.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 12.2 — Sort Colors (Dutch National Flag)</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array with only values 0, 1, and 2, sort it in-place so all 0s come first, then all 1s, then all 2s. Do not use the built-in sort and solve it in one pass.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use three pointers: <code>low</code> (boundary of 0s), <code>mid</code> (current), <code>high</code> (boundary of 2s). At each step: if <code>arr[mid]</code> is 0, swap with <code>arr[low]</code> and advance both. If 2, swap with <code>arr[high]</code> and retreat high. If 1, just advance mid.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">sort_colors</span>(nums: list[<span class="bi">int</span>]) -> <span class="kw">None</span>:
+    low, mid, high = <span class="nu">0</span>, <span class="nu">0</span>, <span class="bi">len</span>(nums) - <span class="nu">1</span>
+    <span class="kw">while</span> mid <= high:
+        <span class="kw">if</span>   nums[mid] == <span class="nu">0</span>:
+            nums[low], nums[mid] = nums[mid], nums[low]
+            low += <span class="nu">1</span>; mid += <span class="nu">1</span>
+        <span class="kw">elif</span> nums[mid] == <span class="nu">2</span>:
+            nums[mid], nums[high] = nums[high], nums[mid]
+            high -= <span class="nu">1</span>   <span class="cm"># do NOT advance mid: need to re-examine swapped element</span>
+        <span class="kw">else</span>:
+            mid += <span class="nu">1</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — single pass. <strong>Space: O(1)</strong> — in-place.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The Dutch National Flag problem is the three-way partitioning step of Quick Sort. Mastering it makes Quick Sort easier to understand and unlocks many three-way partitioning problems.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li><strong>Merge Sort</strong>: O(n log n) guaranteed, stable, O(n) space — use when you need stability.</li>
+    <li><strong>Quick Sort</strong>: O(n log n) average, O(n²) worst (fixed with randomisation), O(log n) space.</li>
+    <li>In interviews, use Python's <code>sorted()</code> unless asked to implement a sort.</li>
+    <li>Many interval problems are solved by <strong>sorting by start time</strong> and then doing a linear scan.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 12.1 (Beginner)</strong>
+      <p>Implement insertion sort. After implementing, trace through the array <code>[5,3,8,1,9,2]</code> step by step on paper to see how the sorted portion grows from the left.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 12.2 (Intermediate)</strong>
+      <p>Given an array of meeting times <code>[[start, end], ...]</code>, determine the minimum number of meeting rooms required. Sort by start time and use a min-heap of end times.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 12.3 (Advanced)</strong>
+      <p>Given an integer array, find the length of the longest strictly increasing subsequence. This is the LIS problem — it can be solved in O(n²) with DP, but there is also an O(n log n) solution using patience sorting (binary search). Try to implement both.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 13 — BINARY SEARCH
+     ============================================================ -->
+<section id="ch13" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 4 — Algorithms</div>
+  <div class="chapter-number">13</div>
+  <h1 class="chapter-title">Binary Search</h1>
+  <p class="chapter-intro">Binary search is the art of discarding half the search space at every step. Applied to a sorted array, it finds any element in O(log n) time. Applied more broadly, it solves a whole category of optimisation problems where the answer can be "guessed" and verified cheaply.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Classic Template</h2>
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Think of a "high-low" guessing game. Your friend thinks of a number between 1 and 100. You guess 50. They say "lower." You guess 25. They say "higher." You guess 37... You will always find the answer in at most 7 guesses (log₂ 100 ≈ 7). Binary search is this game, made precise.</p>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Three Binary Search Templates <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="cm"># Template 1: Exact match</span>
+<span class="kw">def</span> <span class="fn">binary_search</span>(nums: list[<span class="bi">int</span>], target: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    lo, hi = <span class="nu">0</span>, <span class="bi">len</span>(nums) - <span class="nu">1</span>
+    <span class="kw">while</span> lo <= hi:
+        mid = lo + (hi - lo) // <span class="nu">2</span>   <span class="cm"># avoids integer overflow</span>
+        <span class="kw">if</span>   nums[mid] == target: <span class="kw">return</span> mid
+        <span class="kw">elif</span> nums[mid] <  target: lo = mid + <span class="nu">1</span>
+        <span class="kw">else</span>:                     hi = mid - <span class="nu">1</span>
+    <span class="kw">return</span> -<span class="nu">1</span>
+
+<span class="cm"># Template 2: Leftmost insertion point (first element >= target)</span>
+<span class="kw">def</span> <span class="fn">lower_bound</span>(nums: list[<span class="bi">int</span>], target: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    lo, hi = <span class="nu">0</span>, <span class="bi">len</span>(nums)    <span class="cm"># hi = len(nums) for "beyond last" result</span>
+    <span class="kw">while</span> lo < hi:
+        mid = (lo + hi) // <span class="nu">2</span>
+        <span class="kw">if</span> nums[mid] < target: lo = mid + <span class="nu">1</span>
+        <span class="kw">else</span>:                  hi = mid
+    <span class="kw">return</span> lo
+
+<span class="cm"># Template 3: Search on answer space (binary search on the result)</span>
+<span class="kw">def</span> <span class="fn">search_answer_space</span>(lo: <span class="bi">int</span>, hi: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="kw">while</span> lo < hi:
+        mid = (lo + hi) // <span class="nu">2</span>
+        <span class="kw">if</span> <span class="fn">feasible</span>(mid):   <span class="cm"># feasible() returns True if mid satisfies the condition</span>
+            hi = mid
+        <span class="kw">else</span>:
+            lo = mid + <span class="nu">1</span>
+    <span class="kw">return</span> lo            <span class="cm"># lo == hi == the smallest feasible answer</span></code></pre>
+</div>
+
+<!-- PROBLEM 13.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 13.1 — Search in Rotated Sorted Array</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>A sorted array was rotated at an unknown pivot. Find the target value's index, or return -1 if not found. Must run in O(log n).</p>
+      <p><strong>Example:</strong> <code>nums=[4,5,6,7,0,1,2], target=0</code> → <code>4</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Even in a rotated array, at least one half of the current range is sorted. Check which half is sorted, then decide whether target falls in that half. If yes, search there. If not, search the other half.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">search_rotated</span>(nums: list[<span class="bi">int</span>], target: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    lo, hi = <span class="nu">0</span>, <span class="bi">len</span>(nums) - <span class="nu">1</span>
+    <span class="kw">while</span> lo <= hi:
+        mid = (lo + hi) // <span class="nu">2</span>
+        <span class="kw">if</span> nums[mid] == target: <span class="kw">return</span> mid
+
+        <span class="kw">if</span> nums[lo] <= nums[mid]:            <span class="cm"># left half is sorted</span>
+            <span class="kw">if</span> nums[lo] <= target < nums[mid]:
+                hi = mid - <span class="nu">1</span>              <span class="cm"># target in left half</span>
+            <span class="kw">else</span>:
+                lo = mid + <span class="nu">1</span>              <span class="cm"># target in right half</span>
+        <span class="kw">else</span>:                               <span class="cm"># right half is sorted</span>
+            <span class="kw">if</span> nums[mid] < target <= nums[hi]:
+                lo = mid + <span class="nu">1</span>              <span class="cm"># target in right half</span>
+            <span class="kw">else</span>:
+                hi = mid - <span class="nu">1</span>              <span class="cm"># target in left half</span>
+    <span class="kw">return</span> -<span class="nu">1</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(log n)</strong>. <strong>Space: O(1)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>In a rotated array, you can still binary search — you just need to identify <em>which half is sorted</em> before deciding which half to recurse into.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 13.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 13.2 — Koko Eating Bananas (Search on Answer Space)</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Koko can eat at most <code>k</code> bananas per hour. Given piles of bananas and <code>h</code> hours, find the minimum integer eating speed <code>k</code> such that she can finish all piles within <code>h</code> hours.</p>
+      <p><strong>Example:</strong> <code>piles=[3,6,7,11], h=8</code> → <code>4</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>The answer <code>k</code> lies between 1 and max(piles). As k increases, fewer hours are needed — the feasibility is monotone. Binary search on k: check if a given speed is feasible (total hours ≤ h). Find the smallest k that is feasible.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">import</span> math
+
+<span class="kw">def</span> <span class="fn">min_eating_speed</span>(piles: list[<span class="bi">int</span>], h: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="kw">def</span> <span class="fn">feasible</span>(speed: <span class="bi">int</span>) -> <span class="bi">bool</span>:
+        <span class="cm"># Hours needed at this speed (ceiling division per pile)</span>
+        <span class="kw">return</span> <span class="bi">sum</span>(math.ceil(p / speed) <span class="kw">for</span> p <span class="kw">in</span> piles) <= h
+
+    lo, hi = <span class="nu">1</span>, <span class="bi">max</span>(piles)
+    <span class="kw">while</span> lo < hi:
+        mid = (lo + hi) // <span class="nu">2</span>
+        <span class="kw">if</span> feasible(mid):
+            hi = mid       <span class="cm"># might be the answer, but try smaller</span>
+        <span class="kw">else</span>:
+            lo = mid + <span class="nu">1</span>  <span class="cm"># definitely not fast enough</span>
+    <span class="kw">return</span> lo</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n log m)</strong> where n = number of piles, m = max pile size. <strong>Space: O(1)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>"Binary search on the answer" works whenever: (1) the answer is a number in some range, (2) a feasibility check is monotone (once feasible, always feasible for larger/smaller values), and (3) checking feasibility is cheaper than exhaustive search.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>Binary search runs in <strong>O(log n)</strong> by halving the search space each step.</li>
+    <li>Use <code>mid = lo + (hi - lo) // 2</code> to avoid integer overflow.</li>
+    <li>Three templates: exact match, lower bound (leftmost position), search-on-answer-space.</li>
+    <li><strong>Search on answer space</strong>: whenever the question asks for the minimum/maximum value satisfying a monotone condition, binary search on the answer.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 13.1 (Beginner)</strong>
+      <p>Given a sorted array and a target, use binary search to find: (a) the index of the target, or -1 if not present; (b) the index of the first element ≥ target; (c) the index of the last element ≤ target. Implement all three variants.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 13.2 (Intermediate)</strong>
+      <p>Find the minimum in a rotated sorted array (no duplicates). This is similar to the search problem — one side is always sorted. Find which side and recurse appropriately. Run time must be O(log n).</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 13.3 (Advanced)</strong>
+      <p>Given two sorted arrays of sizes m and n, find their median in O(log(min(m,n))). This is one of the hardest binary search problems. Binary search on the smaller array's partition point.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 14 — RECURSION & BACKTRACKING
+     ============================================================ -->
+<section id="ch14" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 4 — Algorithms</div>
+  <div class="chapter-number">14</div>
+  <h1 class="chapter-title">Recursion and Backtracking</h1>
+  <p class="chapter-intro">Recursion is a function calling itself to solve a smaller version of the same problem. Backtracking is recursion applied to exploration — you try a path, and if it fails, you undo your last choice and try another. Together, they solve every "generate all possibilities" problem.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Universal Backtracking Template</h2>
+<div class="callout callout-note">
+  <div class="callout-title">📘 Choose → Explore → Unchoose</div>
+  <p>Every backtracking problem follows the same three-step loop:<br>
+  1. <strong>Choose</strong>: Pick a candidate from the available choices.<br>
+  2. <strong>Explore</strong>: Recurse with that candidate added to the current path.<br>
+  3. <strong>Unchoose</strong>: Remove the candidate after the recursion returns (backtrack to the previous state).</p>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Backtracking Template <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">backtrack</span>(path: list, choices: list, result: list) -> <span class="kw">None</span>:
+    <span class="kw">if</span> <span class="fn">is_solution</span>(path):
+        result.append(<span class="bi">list</span>(path))   <span class="cm"># save a copy, not a reference!</span>
+        <span class="kw">return</span>
+
+    <span class="kw">for</span> choice <span class="kw">in</span> choices:
+        <span class="kw">if</span> <span class="fn">is_valid</span>(choice, path):
+            path.append(choice)       <span class="cm"># Choose</span>
+            backtrack(path, <span class="fn">next_choices</span>(choices, choice), result)  <span class="cm"># Explore</span>
+            path.pop()                <span class="cm"># Unchoose (backtrack)</span></code></pre>
+</div>
+
+<!-- PROBLEM 14.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 14.1 — Subsets</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an integer array <code>nums</code> with no duplicates, return all possible subsets (the power set).</p>
+      <p><strong>Example:</strong> <code>[1,2,3]</code> → <code>[[],[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>At each index, we make a binary choice: include <code>nums[i]</code> in the current subset, or skip it. Both choices lead to a recursive call on the remaining elements. When we have processed all elements, add the current subset to results.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">subsets</span>(nums: list[<span class="bi">int</span>]) -> list[list[<span class="bi">int</span>]]:
+    result = []
+
+    <span class="kw">def</span> <span class="fn">backtrack</span>(start: <span class="bi">int</span>, path: list[<span class="bi">int</span>]):
+        result.append(<span class="bi">list</span>(path))   <span class="cm"># every path is a valid subset</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(start, <span class="bi">len</span>(nums)):
+            path.append(nums[i])          <span class="cm"># choose</span>
+            backtrack(i + <span class="nu">1</span>, path)        <span class="cm"># explore (only go forward)</span>
+            path.pop()                    <span class="cm"># unchoose</span>
+
+    backtrack(<span class="nu">0</span>, [])
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(2ⁿ × n)</strong> — 2ⁿ subsets, each takes O(n) to copy. <strong>Space: O(n)</strong> recursion depth.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 14.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 14.2 — Permutations</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array of distinct integers, return all possible permutations.</p>
+      <p><strong>Example:</strong> <code>[1,2,3]</code> → <code>[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Build the permutation position by position. At each step, pick any unused number, add it to the path, recurse, then remove it and mark it unused again. Track which numbers have been used with a boolean array.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">permutations</span>(nums: list[<span class="bi">int</span>]) -> list[list[<span class="bi">int</span>]]:
+    result = []
+    used   = [<span class="kw">False</span>] * <span class="bi">len</span>(nums)
+
+    <span class="kw">def</span> <span class="fn">backtrack</span>(path: list[<span class="bi">int</span>]):
+        <span class="kw">if</span> <span class="bi">len</span>(path) == <span class="bi">len</span>(nums):
+            result.append(<span class="bi">list</span>(path))
+            <span class="kw">return</span>
+        <span class="kw">for</span> i, num <span class="kw">in</span> <span class="bi">enumerate</span>(nums):
+            <span class="kw">if</span> used[i]: <span class="kw">continue</span>
+            used[i] = <span class="kw">True</span>
+            path.append(num)        <span class="cm"># choose</span>
+            backtrack(path)         <span class="cm"># explore</span>
+            path.pop()              <span class="cm"># unchoose</span>
+            used[i] = <span class="kw">False</span>
+
+    backtrack([])
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n! × n)</strong> — n! permutations, each takes O(n) to copy. <strong>Space: O(n)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 14.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 14.3 — Combination Sum</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an array of distinct integers and a target, find all unique combinations that sum to the target. Each number can be reused unlimited times.</p>
+      <p><strong>Example:</strong> <code>candidates=[2,3,6,7], target=7</code> → <code>[[2,2,3],[7]]</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">combination_sum</span>(candidates: list[<span class="bi">int</span>], target: <span class="bi">int</span>) -> list[list[<span class="bi">int</span>]]:
+    result = []
+
+    <span class="kw">def</span> <span class="fn">backtrack</span>(start: <span class="bi">int</span>, path: list[<span class="bi">int</span>], remaining: <span class="bi">int</span>):
+        <span class="kw">if</span> remaining == <span class="nu">0</span>:
+            result.append(<span class="bi">list</span>(path))
+            <span class="kw">return</span>
+        <span class="kw">if</span> remaining < <span class="nu">0</span>: <span class="kw">return</span>   <span class="cm"># pruning: overshot</span>
+
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(start, <span class="bi">len</span>(candidates)):
+            path.append(candidates[i])
+            backtrack(i, path, remaining - candidates[i])  <span class="cm"># i (not i+1): allow reuse</span>
+            path.pop()
+
+    backtrack(<span class="nu">0</span>, [], target)
+    <span class="kw">return</span> result</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(N^(T/M+1))</strong> where N = candidates, T = target, M = smallest candidate. <strong>Space: O(T/M)</strong> recursion depth.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Pass a <code>start</code> index to avoid generating duplicate combinations (e.g., [2,3] and [3,2] for the same sum). Only move forward — never back — in the candidates array.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 14.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 14.4 — Word Search</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an <code>m x n</code> character grid and a string <code>word</code>, return <code>True</code> if the word can be constructed from sequentially adjacent cells (horizontally or vertically). Each cell may only be used once.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>DFS + backtracking. For each cell matching the first character, try to extend the match to adjacent cells. Mark a cell as visited before recursing; unmark it after (backtrack) so other paths can use it.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">exist</span>(board: list[list[<span class="bi">str</span>]], word: <span class="bi">str</span>) -> <span class="bi">bool</span>:
+    rows, cols = <span class="bi">len</span>(board), <span class="bi">len</span>(board[<span class="nu">0</span>])
+
+    <span class="kw">def</span> <span class="fn">dfs</span>(r, c, idx) -> <span class="bi">bool</span>:
+        <span class="kw">if</span> idx == <span class="bi">len</span>(word): <span class="kw">return</span> <span class="kw">True</span>   <span class="cm"># all chars matched!</span>
+        <span class="kw">if</span> <span class="kw">not</span> (<span class="nu">0</span> <= r < rows <span class="kw">and</span> <span class="nu">0</span> <= c < cols): <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">if</span> board[r][c] != word[idx]: <span class="kw">return</span> <span class="kw">False</span>
+
+        tmp = board[r][c]
+        board[r][c] = <span class="st">'#'</span>              <span class="cm"># mark visited</span>
+        found = (dfs(r+<span class="nu">1</span>,c,idx+<span class="nu">1</span>) <span class="kw">or</span> dfs(r-<span class="nu">1</span>,c,idx+<span class="nu">1</span>) <span class="kw">or</span>
+                 dfs(r,c+<span class="nu">1</span>,idx+<span class="nu">1</span>) <span class="kw">or</span> dfs(r,c-<span class="nu">1</span>,idx+<span class="nu">1</span>))
+        board[r][c] = tmp                 <span class="cm"># restore (backtrack)</span>
+        <span class="kw">return</span> found
+
+    <span class="kw">return</span> <span class="bi">any</span>(dfs(r, c, <span class="nu">0</span>) <span class="kw">for</span> r <span class="kw">in</span> <span class="bi">range</span>(rows)
+                              <span class="kw">for</span> c <span class="kw">in</span> <span class="bi">range</span>(cols))</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(m × n × 4^L)</strong> where L = word length. <strong>Space: O(L)</strong> — recursion depth.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>Backtracking = DFS over all possibilities + pruning invalid branches early.</li>
+    <li>The universal pattern: <strong>choose → explore → unchoose</strong>.</li>
+    <li>Always append a <strong>copy</strong> of the path (<code>list(path)</code>) to results — never the reference.</li>
+    <li>Pass a <code>start</code> index in combination problems to avoid duplicate orderings.</li>
+    <li>For grid problems, mark cells visited before DFS and restore them after.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 14.1 (Beginner)</strong>
+      <p>Generate all valid combinations of n pairs of parentheses. For example, n=3 should yield 5 combinations. Use backtracking: track open and close counts, only add '(' if open &lt; n, only add ')' if close &lt; open.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 14.2 (Intermediate)</strong>
+      <p>Solve the N-Queens problem: place N queens on an N×N chessboard so no two queens threaten each other. Return all distinct solutions. Use backtracking row by row, and track which columns, diagonals, and anti-diagonals are under attack using sets.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 14.3 (Advanced)</strong>
+      <p>Given a string, partition it such that every substring is a palindrome. Return all possible palindrome partitionings. Use backtracking and an is_palindrome helper. For bonus points, precompute a 2D DP table for is_palindrome to speed up the check.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 15 — DYNAMIC PROGRAMMING
+     ============================================================ -->
+<section id="ch15" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 4 — Algorithms</div>
+  <div class="chapter-number">15</div>
+  <h1 class="chapter-title">Dynamic Programming</h1>
+  <p class="chapter-intro">Dynamic programming (DP) is the most intellectually rich topic in DSA — and the most feared. But underneath the intimidating name is a simple idea: if you are solving the same subproblem over and over, remember the answer instead of computing it again. This one insight transforms exponential-time recursion into polynomial-time solutions.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Two Conditions for DP</h2>
+<p>A problem is a candidate for dynamic programming if and only if it has both of these properties:</p>
+<ol>
+  <li><strong>Overlapping subproblems:</strong> The recursive solution solves the same subproblem multiple times. (If every subproblem is unique, divide-and-conquer is sufficient.)</li>
+  <li><strong>Optimal substructure:</strong> The optimal solution to the full problem can be constructed from optimal solutions to its subproblems.</li>
+</ol>
+
+<h2>Memoisation vs Tabulation</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Approach</th><th>Direction</th><th>Style</th><th>Pros</th><th>Cons</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Memoisation (top-down)</td>
+      <td>Recursion with cache</td>
+      <td>Natural recursion + hash map</td>
+      <td>Easy to write; only computes needed states</td>
+      <td>Recursion stack overhead; risk of hitting Python's recursion limit</td>
+    </tr>
+    <tr>
+      <td>Tabulation (bottom-up)</td>
+      <td>Iterative, fill table</td>
+      <td>Loops fill dp[] array</td>
+      <td>No recursion overhead; often allows space optimisation</td>
+      <td>Must determine the correct fill order</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- PROBLEM 15.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 15.1 — Climbing Stairs</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>You are climbing n stairs. Each time you can climb 1 or 2 steps. How many distinct ways can you reach the top?</p>
+      <p><strong>Example:</strong> n=4 → 5 ways</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>To reach stair <code>n</code>, you must have come from stair <code>n-1</code> (one step) or stair <code>n-2</code> (two steps). So <code>ways(n) = ways(n-1) + ways(n-2)</code>. This is exactly the Fibonacci recurrence. Base cases: ways(1)=1, ways(2)=2.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python — Bottom-Up DP <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">climb_stairs</span>(n: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="kw">if</span> n <= <span class="nu">2</span>: <span class="kw">return</span> n
+    a, b = <span class="nu">1</span>, <span class="nu">2</span>   <span class="cm"># ways(1), ways(2)</span>
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">3</span>, n + <span class="nu">1</span>):
+        a, b = b, a + b   <span class="cm"># slide the window forward</span>
+    <span class="kw">return</span> b</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(1)</strong> — only two variables needed.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 15.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 15.2 — House Robber</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>You are a thief. Houses are arranged in a row; each has some money. You cannot rob two adjacent houses (the alarm triggers). Maximise the total money you can rob.</p>
+      <p><strong>Example:</strong> <code>[2,7,9,3,1]</code> → <code>12</code> (rob house 0, 2, 4)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>At house <code>i</code>, choose: rob it (get <code>nums[i] + best_up_to[i-2]</code>) or skip it (get <code>best_up_to[i-1]</code>). Take the maximum. Only two previous values are needed.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">rob</span>(nums: list[<span class="bi">int</span>]) -> <span class="bi">int</span>:
+    prev2, prev1 = <span class="nu">0</span>, <span class="nu">0</span>   <span class="cm"># best up to i-2, best up to i-1</span>
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        curr  = <span class="bi">max</span>(prev1, prev2 + num)  <span class="cm"># skip or rob current house</span>
+        prev2, prev1 = prev1, curr
+    <span class="kw">return</span> prev1</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(1)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 15.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 15.3 — Coin Change</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given coin denominations and a target amount, find the minimum number of coins needed to make up the amount. Return -1 if impossible.</p>
+      <p><strong>Example:</strong> <code>coins=[1,5,6,9], amount=11</code> → <code>2</code> (5+6)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Classic unbounded knapsack. <code>dp[i]</code> = minimum coins to make amount <code>i</code>. For each amount, try every coin denomination: <code>dp[i] = min(dp[i], dp[i - coin] + 1)</code>. Base case: <code>dp[0] = 0</code>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">coin_change</span>(coins: list[<span class="bi">int</span>], amount: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    INF = amount + <span class="nu">1</span>           <span class="cm"># sentinel: more than any valid answer</span>
+    dp  = [INF] * (amount + <span class="nu">1</span>)
+    dp[<span class="nu">0</span>] = <span class="nu">0</span>                   <span class="cm"># base case: 0 coins to make amount 0</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">1</span>, amount + <span class="nu">1</span>):
+        <span class="kw">for</span> coin <span class="kw">in</span> coins:
+            <span class="kw">if</span> coin <= i:
+                dp[i] = <span class="bi">min</span>(dp[i], dp[i - coin] + <span class="nu">1</span>)
+
+    <span class="kw">return</span> dp[amount] <span class="kw">if</span> dp[amount] < INF <span class="kw">else</span> -<span class="nu">1</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(amount × len(coins))</strong>. <strong>Space: O(amount)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 15.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 15.4 — Longest Common Subsequence</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given two strings <code>text1</code> and <code>text2</code>, find the length of their longest common subsequence.</p>
+      <p><strong>Example:</strong> <code>text1="abcde"</code>, <code>text2="ace"</code> → <code>3</code> (LCS = "ace")</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>2D DP. <code>dp[i][j]</code> = LCS of <code>text1[:i]</code> and <code>text2[:j]</code>. If the characters match: <code>dp[i][j] = dp[i-1][j-1] + 1</code>. If not: <code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code> — skip one character from either string.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">lcs</span>(text1: <span class="bi">str</span>, text2: <span class="bi">str</span>) -> <span class="bi">int</span>:
+    m, n = <span class="bi">len</span>(text1), <span class="bi">len</span>(text2)
+    dp = [[<span class="nu">0</span>] * (n + <span class="nu">1</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="bi">range</span>(m + <span class="nu">1</span>)]
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">1</span>, m + <span class="nu">1</span>):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">1</span>, n + <span class="nu">1</span>):
+            <span class="kw">if</span> text1[i-<span class="nu">1</span>] == text2[j-<span class="nu">1</span>]:
+                dp[i][j] = dp[i-<span class="nu">1</span>][j-<span class="nu">1</span>] + <span class="nu">1</span>   <span class="cm"># characters match</span>
+            <span class="kw">else</span>:
+                dp[i][j] = <span class="bi">max</span>(dp[i-<span class="nu">1</span>][j], dp[i][j-<span class="nu">1</span>])
+
+    <span class="kw">return</span> dp[m][n]</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(m × n)</strong>. <strong>Space: O(m × n)</strong> (reducible to O(n) with rolling array).</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 15.5 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 15.5 — 0/1 Knapsack (Partition Equal Subset Sum)</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an integer array, determine if it can be partitioned into two subsets with equal sum.</p>
+      <p><strong>Example:</strong> <code>[1,5,11,5]</code> → <code>True</code> (subsets [1,5,5] and [11])</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Total sum must be even. Then the question becomes: can we find a subset summing to <code>total/2</code>? This is the classic 0/1 knapsack. Use a boolean DP array where <code>dp[s]</code> = True if sum <code>s</code> is achievable. Process in reverse to avoid counting the same item twice.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">can_partition</span>(nums: list[<span class="bi">int</span>]) -> <span class="bi">bool</span>:
+    total = <span class="bi">sum</span>(nums)
+    <span class="kw">if</span> total % <span class="nu">2</span>: <span class="kw">return</span> <span class="kw">False</span>   <span class="cm"># odd total → impossible</span>
+    target = total // <span class="nu">2</span>
+
+    dp = [<span class="kw">False</span>] * (target + <span class="nu">1</span>)
+    dp[<span class="nu">0</span>] = <span class="kw">True</span>   <span class="cm"># base case: empty subset sums to 0</span>
+
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        <span class="kw">for</span> s <span class="kw">in</span> <span class="bi">range</span>(target, num - <span class="nu">1</span>, -<span class="nu">1</span>):  <span class="cm"># traverse backwards: 0/1 knapsack</span>
+            dp[s] = dp[s] <span class="kw">or</span> dp[s - num]
+
+    <span class="kw">return</span> dp[target]</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n × target)</strong>. <strong>Space: O(target)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>The 0/1 knapsack traverses the capacity backwards to ensure each item is only counted once. If you traverse forward, you get the unbounded knapsack (items can be reused).</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 15.6 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 15.6 — Unique Paths</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>A robot is in the top-left corner of an m × n grid. It can only move right or down. How many unique paths reach the bottom-right corner?</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">unique_paths</span>(m: <span class="bi">int</span>, n: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="cm"># dp[c] = paths to reach (current_row, c)</span>
+    dp = [<span class="nu">1</span>] * n   <span class="cm"># first row: only 1 way (go right)</span>
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">1</span>, m):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">1</span>, n):
+            dp[c] += dp[c-<span class="nu">1</span>]   <span class="cm"># paths from above + paths from left</span>
+    <span class="kw">return</span> dp[-<span class="nu">1</span>]</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(m × n)</strong>. <strong>Space: O(n)</strong> — rolling 1D array.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">🟢 How to Identify DP Problems</div>
+  <p>Ask yourself: (1) Does the problem ask for a count, maximum, minimum, or boolean about all ways to achieve something? (2) If I brute-force it with recursion, am I solving the same subproblem repeatedly? If yes to both, it is almost certainly DP. Common keywords: "number of ways," "minimum cost," "maximum profit," "can you reach," "longest/shortest."</p>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>DP requires <strong>overlapping subproblems</strong> and <strong>optimal substructure</strong>.</li>
+    <li><strong>Top-down (memoisation):</strong> recursion + cache. <strong>Bottom-up (tabulation):</strong> iterative array fill.</li>
+    <li><strong>1D DP patterns:</strong> Fibonacci/climbing stairs, house robber, coin change.</li>
+    <li><strong>2D DP patterns:</strong> LCS, edit distance, grid paths.</li>
+    <li><strong>0/1 Knapsack:</strong> traverse capacity backwards. <strong>Unbounded Knapsack:</strong> traverse forwards.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 15.1 (Beginner)</strong>
+      <p>Implement the edit distance (Levenshtein distance) algorithm. Given two strings, find the minimum number of single-character edits (insert, delete, replace) to transform one into the other. Use a 2D DP table.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 15.2 (Intermediate)</strong>
+      <p>Given a string and a dictionary of words, determine if the string can be segmented into a space-separated sequence of dictionary words (Word Break). Use 1D DP where <code>dp[i]</code> = True if the first i characters can be segmented.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 15.3 (Advanced)</strong>
+      <p>Solve the Longest Increasing Subsequence (LIS) problem in O(n log n) using patience sorting. The idea: maintain a list of "piles" where each pile's top is the smallest possible tail for an increasing subsequence of a given length. Use binary search to find the correct pile for each element.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>

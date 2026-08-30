@@ -1,0 +1,1044 @@
+<!-- ============================================================
+     PART 3 DIVIDER
+     ============================================================ -->
+<div class="part-divider">
+  <span class="part-number">III</span>
+  <div class="part-title">Non-Linear Data Structures</div>
+  <div class="part-desc">Trees, heaps, and graphs — where the real power of data organisation lives</div>
+</div>
+
+<!-- ============================================================
+     CHAPTER 8 — TREES & BINARY TREES
+     ============================================================ -->
+<section id="ch8" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 3 — Non-Linear Data Structures</div>
+  <div class="chapter-number">08</div>
+  <h1 class="chapter-title">Trees and Binary Trees</h1>
+  <p class="chapter-intro">Arrays and linked lists store data in a line. Trees break that constraint and let data branch in multiple directions — opening up an entirely new class of problems and solutions. Once you understand trees, graphs, heaps, and many other structures become much easier to grasp.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The Family Tree Analogy</h2>
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Think of a family tree. You start at a single ancestor at the top — the <strong>root</strong>. Each person can have children. Each child can have their own children. There are no cycles (you cannot be your own ancestor). The people with no children are called <strong>leaves</strong>. The number of connections between a person and the root is their <strong>depth</strong>. This is exactly how a tree data structure works.</p>
+</div>
+
+<h2>Tree Vocabulary</h2>
+<ul>
+  <li><strong>Root:</strong> The single top-most node. Every tree has exactly one root.</li>
+  <li><strong>Parent / Child:</strong> If node A points to node B, A is B's parent and B is A's child.</li>
+  <li><strong>Leaf:</strong> A node with no children.</li>
+  <li><strong>Height:</strong> The longest path from a node down to a leaf.</li>
+  <li><strong>Depth:</strong> The distance from the root to a given node.</li>
+  <li><strong>Subtree:</strong> Any node and all its descendants form a valid subtree.</li>
+</ul>
+
+<h2>Binary Tree: At Most Two Children</h2>
+<p>A <strong>binary tree</strong> is a tree where every node has at most two children — conventionally called <strong>left</strong> and <strong>right</strong>. This seemingly simple constraint unlocks elegant recursive algorithms.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — TreeNode Class <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">class</span> <span class="fn">TreeNode</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, val: <span class="bi">int</span> = <span class="nu">0</span>,
+                 left=<span class="kw">None</span>, right=<span class="kw">None</span>):
+        self.val   = val
+        self.left  = left
+        self.right = right
+
+<span class="cm"># Build a small tree:  1</span>
+<span class="cm">#                     / \</span>
+<span class="cm">#                    2   3</span>
+root = TreeNode(<span class="nu">1</span>,
+        TreeNode(<span class="nu">2</span>),
+        TreeNode(<span class="nu">3</span>))</code></pre>
+</div>
+
+<h2>Tree Traversals</h2>
+<p>Traversal means visiting every node exactly once. There are four canonical ways to traverse a binary tree, each with a different visit order:</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Traversal</th><th>Order</th><th>Use Case</th></tr></thead>
+  <tbody>
+    <tr><td>Inorder</td><td>Left → Root → Right</td><td>Prints BST values in sorted order</td></tr>
+    <tr><td>Preorder</td><td>Root → Left → Right</td><td>Serialise / copy a tree</td></tr>
+    <tr><td>Postorder</td><td>Left → Right → Root</td><td>Delete a tree, evaluate expressions</td></tr>
+    <tr><td>Level Order</td><td>Level by level (BFS)</td><td>Shortest path, level-based problems</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — All Four Traversals <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+<span class="kw">from</span> typing <span class="kw">import</span> Optional, List
+
+<span class="cm"># Recursive DFS traversals</span>
+<span class="kw">def</span> <span class="fn">inorder</span>(root: Optional[TreeNode]) -> List[<span class="bi">int</span>]:
+    <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+    <span class="kw">return</span> inorder(root.left) + [root.val] + inorder(root.right)
+
+<span class="kw">def</span> <span class="fn">preorder</span>(root: Optional[TreeNode]) -> List[<span class="bi">int</span>]:
+    <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+    <span class="kw">return</span> [root.val] + preorder(root.left) + preorder(root.right)
+
+<span class="kw">def</span> <span class="fn">postorder</span>(root: Optional[TreeNode]) -> List[<span class="bi">int</span>]:
+    <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+    <span class="kw">return</span> postorder(root.left) + postorder(root.right) + [root.val]
+
+<span class="cm"># Iterative level-order (BFS)</span>
+<span class="kw">def</span> <span class="fn">level_order_flat</span>(root: Optional[TreeNode]) -> List[<span class="bi">int</span>]:
+    <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+    result, q = [], deque([root])
+    <span class="kw">while</span> q:
+        node = q.popleft()
+        result.append(node.val)
+        <span class="kw">if</span> node.left:  q.append(node.left)
+        <span class="kw">if</span> node.right: q.append(node.right)
+    <span class="kw">return</span> result</code></pre>
+</div>
+
+<!-- PROBLEM 8.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 8.1 — Maximum Depth of Binary Tree</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the root of a binary tree, return its maximum depth — the number of nodes along the longest path from root to the farthest leaf.</p>
+      <p><strong>Example:</strong> Tree <code>[3,9,20,null,null,15,7]</code> → <code>3</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>The depth of any node is 1 + the maximum depth of its two subtrees. An empty tree has depth 0. This is a perfect recursive definition — the base case and recursive case are both crystal clear.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">max_depth</span>(root: Optional[TreeNode]) -> <span class="bi">int</span>:
+    <span class="kw">if</span> <span class="kw">not</span> root:
+        <span class="kw">return</span> <span class="nu">0</span>   <span class="cm"># base case: empty tree has depth 0</span>
+    left_depth  = max_depth(root.left)
+    right_depth = max_depth(root.right)
+    <span class="kw">return</span> <span class="nu">1</span> + <span class="bi">max</span>(left_depth, right_depth)</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong> — Every node is visited once. <strong>Space: O(h)</strong> where h is the height (O(log n) for balanced, O(n) worst case for skewed).</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Tree recursion follows a pattern: handle <code>None</code>, recurse left, recurse right, combine results. This template solves the majority of tree problems.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 8.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 8.2 — Invert Binary Tree</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the root of a binary tree, invert the tree (mirror it), and return its root.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>At every node, swap its left and right children. Then recursively do the same for every subtree. The base case is a <code>None</code> node.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">invert_tree</span>(root: Optional[TreeNode]) -> Optional[TreeNode]:
+    <span class="kw">if</span> <span class="kw">not</span> root:
+        <span class="kw">return</span> <span class="kw">None</span>
+    root.left, root.right = invert_tree(root.right), invert_tree(root.left)
+    <span class="kw">return</span> root</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(h)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 8.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 8.3 — Same Tree</span>
+    <span class="badge badge-beginner">Beginner</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the roots of two binary trees, check whether they are identical in structure and node values.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">is_same_tree</span>(p: Optional[TreeNode], q: Optional[TreeNode]) -> <span class="bi">bool</span>:
+    <span class="kw">if</span> <span class="kw">not</span> p <span class="kw">and</span> <span class="kw">not</span> q: <span class="kw">return</span> <span class="kw">True</span>   <span class="cm"># both empty</span>
+    <span class="kw">if</span> <span class="kw">not</span> p <span class="kw">or</span>  <span class="kw">not</span> q: <span class="kw">return</span> <span class="kw">False</span>  <span class="cm"># one empty, one not</span>
+    <span class="kw">if</span> p.val != q.val:   <span class="kw">return</span> <span class="kw">False</span>  <span class="cm"># values differ</span>
+    <span class="kw">return</span> is_same_tree(p.left, q.left) <span class="kw">and</span> is_same_tree(p.right, q.right)</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(h)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 8.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 8.4 — Diameter of Binary Tree</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>The diameter of a binary tree is the length of the longest path between any two nodes (not necessarily passing through the root). Return the diameter.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>For each node, the longest path through it = left_height + right_height. Use a DFS that simultaneously computes height (for the parent) and updates a global best diameter.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">diameter_of_binary_tree</span>(root: Optional[TreeNode]) -> <span class="bi">int</span>:
+    best = [<span class="nu">0</span>]  <span class="cm"># use a list so inner function can mutate it</span>
+
+    <span class="kw">def</span> <span class="fn">height</span>(node):
+        <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> <span class="nu">0</span>
+        left  = height(node.left)
+        right = height(node.right)
+        best[<span class="nu">0</span>] = <span class="bi">max</span>(best[<span class="nu">0</span>], left + right)  <span class="cm"># diameter through this node</span>
+        <span class="kw">return</span> <span class="nu">1</span> + <span class="bi">max</span>(left, right)           <span class="cm"># height for parent</span>
+
+    height(root)
+    <span class="kw">return</span> best[<span class="nu">0</span>]</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(h)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Many tree problems require tracking two pieces of information simultaneously: something you return up the recursion stack (height) and something you update as a side effect (best diameter). This dual-return pattern is extremely common.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 8.5 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 8.5 — Binary Tree Maximum Path Sum</span>
+    <span class="badge badge-advanced">Advanced</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>A path in a binary tree is a sequence of nodes where each pair of adjacent nodes has an edge. The path does not need to pass through the root. Find the maximum sum of any path.</p>
+      <p><strong>Example:</strong> Tree <code>[-10,9,20,null,null,15,7]</code> → <code>42</code> (path 15→20→7)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Same dual-return pattern as the diameter problem. For each node, the maximum path through it = left_gain + node.val + right_gain (where gain is max(0, subtree_path) — we never include a negative branch). Return only one side (left or right) plus the node value for the parent's calculation.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">max_path_sum</span>(root: Optional[TreeNode]) -> <span class="bi">int</span>:
+    best = [<span class="bi">float</span>(<span class="st">'-inf'</span>)]
+
+    <span class="kw">def</span> <span class="fn">gain</span>(node):
+        <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> <span class="nu">0</span>
+        left_gain  = <span class="bi">max</span>(gain(node.left),  <span class="nu">0</span>)  <span class="cm"># ignore negative branches</span>
+        right_gain = <span class="bi">max</span>(gain(node.right), <span class="nu">0</span>)
+        best[<span class="nu">0</span>] = <span class="bi">max</span>(best[<span class="nu">0</span>], node.val + left_gain + right_gain)
+        <span class="kw">return</span> node.val + <span class="bi">max</span>(left_gain, right_gain)  <span class="cm"># only one branch upward</span>
+
+    gain(root)
+    <span class="kw">return</span> best[<span class="nu">0</span>]</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(h)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A binary tree has at most two children per node: <code>left</code> and <code>right</code>.</li>
+    <li>The four traversals: <strong>inorder</strong> (L-Root-R), <strong>preorder</strong> (Root-L-R), <strong>postorder</strong> (L-R-Root), <strong>level-order</strong> (BFS).</li>
+    <li>Most tree problems follow: base case (<code>None</code>), recurse left, recurse right, combine.</li>
+    <li>The <strong>dual-return</strong> pattern tracks two quantities simultaneously: a return value going up, and a global best updated as a side effect.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 8.1 (Beginner)</strong>
+      <p>Write a function to check if a binary tree is symmetric (a mirror of itself). Use recursion: a tree is symmetric if its left subtree is the mirror of its right subtree.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 8.2 (Intermediate)</strong>
+      <p>Given a binary tree, find all root-to-leaf paths where the sum of node values equals a given target. Return all such paths as lists. Use DFS with a running total and a path list.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 8.3 (Advanced)</strong>
+      <p>Serialize a binary tree into a string and deserialize it back to the original structure. Use preorder traversal and a delimiter such as <code>','</code> and <code>'#'</code> for null nodes.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 9 — BINARY SEARCH TREES
+     ============================================================ -->
+<section id="ch9" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 3 — Non-Linear Data Structures</div>
+  <div class="chapter-number">09</div>
+  <h1 class="chapter-title">Binary Search Trees</h1>
+  <p class="chapter-intro">A binary search tree is a binary tree with a superpower: its structure enforces a sorted ordering across the entire tree. This single constraint — every left descendant is smaller, every right descendant is larger — makes search, insert, and delete all run in O(log n) for balanced trees.</p>
+</div>
+<div class="chapter-body">
+
+<h2>The BST Property</h2>
+<div class="callout callout-note">
+  <div class="callout-title">📘 The BST Invariant</div>
+  <p>For every node <code>X</code> in a BST:<br>
+  • All nodes in X's <strong>left subtree</strong> have values <strong>strictly less than</strong> X's value.<br>
+  • All nodes in X's <strong>right subtree</strong> have values <strong>strictly greater than</strong> X's value.<br>
+  • This property holds <em>recursively</em> for every subtree.</p>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">ASCII — BST Example <button class="copy-btn">Copy</button></div>
+  <pre><code>        8
+       / \
+      3   10
+     / \    \
+    1   6    14
+       / \   /
+      4   7 13
+
+Inorder traversal: 1, 3, 4, 6, 7, 8, 10, 13, 14  ← sorted!</code></pre>
+</div>
+
+<h2>Search, Insert, and Delete</h2>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — BST Search and Insert <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">search_bst</span>(root: Optional[TreeNode], val: <span class="bi">int</span>) -> Optional[TreeNode]:
+    <span class="kw">if</span> <span class="kw">not</span> root <span class="kw">or</span> root.val == val:
+        <span class="kw">return</span> root
+    <span class="kw">if</span> val < root.val:
+        <span class="kw">return</span> search_bst(root.left,  val)
+    <span class="kw">return</span>     search_bst(root.right, val)
+
+<span class="kw">def</span> <span class="fn">insert_bst</span>(root: Optional[TreeNode], val: <span class="bi">int</span>) -> TreeNode:
+    <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> TreeNode(val)  <span class="cm"># found insertion spot</span>
+    <span class="kw">if</span> val < root.val:
+        root.left  = insert_bst(root.left,  val)
+    <span class="kw">else</span>:
+        root.right = insert_bst(root.right, val)
+    <span class="kw">return</span> root</code></pre>
+</div>
+
+<!-- PROBLEM 9.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 9.1 — Validate Binary Search Tree</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the root of a binary tree, determine if it is a valid BST.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>A common mistake is only checking the immediate parent–child relationship. But a BST must satisfy the property for the entire subtree. The correct approach: pass down a valid range <code>[min_val, max_val]</code> for each node. The root can be anything (−∞, +∞). Going left tightens the upper bound; going right tightens the lower bound.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">is_valid_bst</span>(root: Optional[TreeNode]) -> <span class="bi">bool</span>:
+    <span class="kw">def</span> <span class="fn">validate</span>(node, low: <span class="bi">float</span>, high: <span class="bi">float</span>) -> <span class="bi">bool</span>:
+        <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">if</span> <span class="kw">not</span> (low < node.val < high): <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> (validate(node.left,  low,      node.val) <span class="kw">and</span>
+                validate(node.right, node.val, high))
+
+    <span class="kw">return</span> validate(root, <span class="bi">float</span>(<span class="st">'-inf'</span>), <span class="bi">float</span>(<span class="st">'inf'</span>))</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n)</strong>. <strong>Space: O(h)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>When validating a BST, pass min/max bounds down the recursion — do not rely on checking only the direct parent-child relationship.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 9.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 9.2 — Lowest Common Ancestor of a BST</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a BST and two nodes <code>p</code> and <code>q</code>, find their lowest common ancestor (LCA) — the deepest node that has both as descendants.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use the BST property to navigate in one pass. If both p and q are smaller than the current node, go left. If both are larger, go right. The first node where they split (one goes left, one goes right) is the LCA.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">lowest_common_ancestor</span>(root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:
+    <span class="kw">while</span> root:
+        <span class="kw">if</span> p.val < root.val <span class="kw">and</span> q.val < root.val:
+            root = root.left       <span class="cm"># both smaller → go left</span>
+        <span class="kw">elif</span> p.val > root.val <span class="kw">and</span> q.val > root.val:
+            root = root.right      <span class="cm"># both larger → go right</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> root            <span class="cm"># split point = LCA</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(h)</strong> where h is the height. <strong>Space: O(1)</strong> — iterative, no stack.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 9.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 9.3 — Kth Smallest Element in a BST</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given the root of a BST and an integer <code>k</code>, return the kth smallest element.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Inorder traversal of a BST yields values in ascending order. The kth element visited is the answer. Use an iterative inorder traversal for clean control flow.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">kth_smallest</span>(root: Optional[TreeNode], k: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    stack, node = [], root
+    <span class="kw">while</span> stack <span class="kw">or</span> node:
+        <span class="kw">while</span> node:                 <span class="cm"># go as far left as possible</span>
+            stack.append(node)
+            node = node.left
+        node = stack.pop()           <span class="cm"># visit this node (inorder)</span>
+        k -= <span class="nu">1</span>
+        <span class="kw">if</span> k == <span class="nu">0</span>: <span class="kw">return</span> node.val  <span class="cm"># found the kth smallest</span>
+        node = node.right            <span class="cm"># move to right subtree</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(h + k)</strong>. <strong>Space: O(h)</strong> — the explicit stack mirrors the recursion stack.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A BST satisfies: all left descendants &lt; node.val &lt; all right descendants, recursively.</li>
+    <li><strong>Inorder traversal of a BST</strong> always yields values in sorted (ascending) order.</li>
+    <li>When validating a BST, pass <strong>min/max bounds</strong> down the recursion — never just check parent-child.</li>
+    <li>BST search and LCA run in <strong>O(h)</strong> — O(log n) for balanced trees, O(n) worst case for skewed.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 9.1 (Beginner)</strong>
+      <p>Write a function to find the minimum and maximum values in a BST. Do it without traversing the entire tree — use the BST property to navigate directly to the answer in O(h) time.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 9.2 (Intermediate)</strong>
+      <p>Write a function to delete a node from a BST. When deleting a node with two children, replace it with its inorder successor (the smallest value in its right subtree).</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 9.3 (Advanced)</strong>
+      <p>Given a sorted array, build the most height-balanced BST from it. Hint: the middle element of any subarray should be the root of the corresponding subtree. This is a divide-and-conquer approach.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 10 — HEAPS & PRIORITY QUEUES
+     ============================================================ -->
+<section id="ch10" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 3 — Non-Linear Data Structures</div>
+  <div class="chapter-number">10</div>
+  <h1 class="chapter-title">Heaps and Priority Queues</h1>
+  <p class="chapter-intro">Imagine a queue where, instead of serving the person who waited longest, you always serve the person with the highest priority. That is exactly what a heap provides — and it makes "find the minimum" or "find the maximum" extremely efficient.</p>
+</div>
+<div class="chapter-body">
+
+<h2>What Is a Heap?</h2>
+<div class="callout callout-analogy">
+  <div class="callout-title">🟣 Analogy</div>
+  <p>Picture a hospital emergency room. Patients are not seen in the order they arrived — the most critically ill patient is always seen first. When a new critical patient arrives, they jump to the front. When the most critical patient leaves, the next-most-critical takes their place. The structure maintaining this ordering is a <strong>heap</strong>.</p>
+</div>
+
+<p>A <strong>min-heap</strong> always keeps the smallest element at the top. A <strong>max-heap</strong> keeps the largest. In Python, the built-in <code>heapq</code> module implements a min-heap. To simulate a max-heap, negate all values.</p>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — heapq Cheat Sheet <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">import</span> heapq
+
+<span class="cm"># Min-heap</span>
+heap = []
+heapq.heappush(heap, <span class="nu">3</span>)   <span class="cm"># push</span>
+heapq.heappush(heap, <span class="nu">1</span>)
+heapq.heappush(heap, <span class="nu">4</span>)
+top = heap[<span class="nu">0</span>]             <span class="cm"># peek minimum: 1 (no removal)</span>
+val = heapq.heappop(heap)  <span class="cm"># pop minimum: returns 1</span>
+
+<span class="cm"># Build heap from list in O(n)</span>
+nums = [<span class="nu">5</span>, <span class="nu">2</span>, <span class="nu">8</span>, <span class="nu">1</span>]
+heapq.heapify(nums)        <span class="cm"># in-place, O(n)</span>
+
+<span class="cm"># Max-heap: negate values</span>
+max_heap = []
+heapq.heappush(max_heap, -<span class="nu">5</span>)
+heapq.heappush(max_heap, -<span class="nu">2</span>)
+max_val = -heapq.heappop(max_heap)  <span class="cm"># returns 5</span>
+
+<span class="cm"># k largest elements</span>
+k_largest  = heapq.nlargest(<span class="nu">3</span>, nums)
+k_smallest = heapq.nsmallest(<span class="nu">3</span>, nums)</code></pre>
+</div>
+
+<!-- PROBLEM 10.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 10.1 — Kth Largest Element in an Array</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given an integer array <code>nums</code> and integer <code>k</code>, return the kth largest element.</p>
+      <p><strong>Example:</strong> <code>[3,2,1,5,6,4], k=2</code> → <code>5</code></p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Maintain a min-heap of size k. As you scan the array, push each element. If the heap grows beyond k, pop the minimum. At the end, the smallest element in the heap is the kth largest overall — it survived by being larger than everything that was ejected.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">import</span> heapq
+
+<span class="kw">def</span> <span class="fn">find_kth_largest</span>(nums: list[<span class="bi">int</span>], k: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    heap = []
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        heapq.heappush(heap, num)
+        <span class="kw">if</span> <span class="bi">len</span>(heap) > k:
+            heapq.heappop(heap)   <span class="cm"># evict the smallest — it's not top-k</span>
+    <span class="kw">return</span> heap[<span class="nu">0</span>]               <span class="cm"># smallest of the top-k = kth largest</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n log k)</strong> — n pushes, each O(log k). <strong>Space: O(k)</strong> — heap size capped at k.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>A min-heap of size k is the canonical approach for "top k" problems. It gives you O(n log k) instead of O(n log n) for full sorting.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 10.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 10.2 — Merge K Sorted Lists</span>
+    <span class="badge badge-advanced">Advanced</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>You are given <code>k</code> sorted linked lists. Merge them all into one sorted linked list.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a min-heap initialised with the first node from each list. Repeatedly pop the minimum node, add it to the result, then push its successor (if any) onto the heap. The heap always contains at most k elements — the "front runners" from each list.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">import</span> heapq
+<span class="kw">from</span> typing <span class="kw">import</span> List, Optional
+
+<span class="kw">def</span> <span class="fn">merge_k_lists</span>(lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+    heap = []
+    <span class="cm"># Seed the heap with the head of each non-empty list</span>
+    <span class="cm"># Tuple: (node_value, list_index, node) — list_index breaks ties</span>
+    <span class="kw">for</span> i, node <span class="kw">in</span> <span class="bi">enumerate</span>(lists):
+        <span class="kw">if</span> node:
+            heapq.heappush(heap, (node.val, i, node))
+
+    dummy = ListNode(<span class="nu">0</span>)
+    tail  = dummy
+    <span class="kw">while</span> heap:
+        val, i, node = heapq.heappop(heap)
+        tail.next = node
+        tail = tail.next
+        <span class="kw">if</span> node.next:
+            heapq.heappush(heap, (node.next.val, i, node.next))
+
+    <span class="kw">return</span> dummy.next</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(N log k)</strong> where N = total nodes, k = number of lists. <strong>Space: O(k)</strong> — heap holds at most one node per list.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 10.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 10.3 — Find Median from Data Stream</span>
+    <span class="badge badge-advanced">Advanced</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Design a data structure that accepts a stream of integers and, after each insertion, can return the current median in O(1) time. Insertion should be O(log n).</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Split the numbers into two halves: a max-heap holding the smaller half, and a min-heap holding the larger half. Keep them balanced (sizes differ by at most 1). The median is the top of the larger half (odd count) or the average of the two tops (even count).</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">import</span> heapq
+
+<span class="kw">class</span> <span class="fn">MedianFinder</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.lo = []   <span class="cm"># max-heap (negate values) — smaller half</span>
+        self.hi = []   <span class="cm"># min-heap — larger half</span>
+
+    <span class="kw">def</span> <span class="fn">add_num</span>(self, num: <span class="bi">int</span>) -> <span class="kw">None</span>:
+        heapq.heappush(self.lo, -num)            <span class="cm"># always push to lo first</span>
+        heapq.heappush(self.hi, -heapq.heappop(self.lo))  <span class="cm"># balance: move max(lo) to hi</span>
+        <span class="kw">if</span> <span class="bi">len</span>(self.hi) > <span class="bi">len</span>(self.lo):          <span class="cm"># keep lo >= hi in size</span>
+            heapq.heappush(self.lo, -heapq.heappop(self.hi))
+
+    <span class="kw">def</span> <span class="fn">find_median</span>(self) -> <span class="bi">float</span>:
+        <span class="kw">if</span> <span class="bi">len</span>(self.lo) > <span class="bi">len</span>(self.hi):
+            <span class="kw">return</span> <span class="bi">float</span>(-self.lo[<span class="nu">0</span>])
+        <span class="kw">return</span> (-self.lo[<span class="nu">0</span>] + self.hi[<span class="nu">0</span>]) / <span class="nu">2.0</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>add_num: O(log n)</strong>. <strong>find_median: O(1)</strong>. <strong>Space: O(n)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Two heaps can maintain the lower and upper halves of a dataset, enabling O(1) median queries. This "two-heap" pattern recurs in any problem that needs to track both the largest-of-the-smalls and smallest-of-the-larges.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>A <strong>min-heap</strong> always pops the smallest element. Python's <code>heapq</code> is a min-heap.</li>
+    <li>Simulate a max-heap by <strong>negating values</strong> before pushing.</li>
+    <li>A <strong>min-heap of size k</strong> solves "top k" problems in O(n log k).</li>
+    <li>The <strong>two-heap pattern</strong> (max-heap of lower half + min-heap of upper half) enables O(1) median queries.</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 10.1 (Beginner)</strong>
+      <p>Use Python's <code>heapq.nlargest</code> and <code>heapq.nsmallest</code> to find the 3 largest and 3 smallest elements in a list. Then implement the same functionality yourself using a manual heap loop — no built-in shortcuts.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 10.2 (Intermediate)</strong>
+      <p>Given a list of tasks where each task has a frequency, implement a scheduler that returns the minimum number of intervals (with cooldown n) to execute all tasks. This is the "Task Scheduler" problem — use a max-heap of frequencies.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 10.3 (Advanced)</strong>
+      <p>Given a sorted matrix where each row and each column is sorted in ascending order, find the kth smallest element. One approach uses a min-heap — think about which elements to seed the heap with and how to expand efficiently.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
+
+<!-- ============================================================
+     CHAPTER 11 — GRAPHS
+     ============================================================ -->
+<section id="ch11" data-section>
+<div class="chapter-hero">
+  <div class="part-label">Part 3 — Non-Linear Data Structures</div>
+  <div class="chapter-number">11</div>
+  <h1 class="chapter-title">Graphs</h1>
+  <p class="chapter-intro">Trees are restricted graphs — they have no cycles and a single root. Graphs are the fully general version: nodes connected by edges, with no restrictions on structure. They model road networks, social connections, dependencies, and more. Understanding graphs unlocks a vast category of real-world problems.</p>
+</div>
+<div class="chapter-body">
+
+<h2>Graph Vocabulary</h2>
+<ul>
+  <li><strong>Vertex (Node):</strong> A single entity in the graph.</li>
+  <li><strong>Edge:</strong> A connection between two vertices.</li>
+  <li><strong>Directed / Undirected:</strong> In a directed graph, edges have a direction (A→B ≠ B→A). In an undirected graph, edges go both ways.</li>
+  <li><strong>Weighted:</strong> Edges can have associated costs or distances.</li>
+  <li><strong>Cycle:</strong> A path that starts and ends at the same vertex.</li>
+  <li><strong>Connected Component:</strong> A maximal set of vertices where every vertex is reachable from every other.</li>
+</ul>
+
+<h2>Graph Representations</h2>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — Adjacency List (most common) <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+
+<span class="cm"># Build an undirected graph from edge list</span>
+<span class="kw">def</span> <span class="fn">build_graph</span>(n: <span class="bi">int</span>, edges: list[list[<span class="bi">int</span>]]) -> dict:
+    graph = defaultdict(<span class="bi">list</span>)
+    <span class="kw">for</span> u, v <span class="kw">in</span> edges:
+        graph[u].append(v)
+        graph[v].append(u)   <span class="cm"># omit this line for directed graphs</span>
+    <span class="kw">return</span> graph
+
+<span class="cm"># Example: 4 nodes, edges 0-1, 0-2, 1-3</span>
+<span class="cm"># graph = {0:[1,2], 1:[0,3], 2:[0], 3:[1]}</span></code></pre>
+</div>
+
+<h2>DFS and BFS Templates</h2>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — DFS (Recursive) <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">dfs</span>(graph: dict, start: <span class="bi">int</span>) -> list[<span class="bi">int</span>]:
+    visited = <span class="bi">set</span>()
+    order   = []
+
+    <span class="kw">def</span> <span class="fn">_dfs</span>(node):
+        visited.add(node)
+        order.append(node)
+        <span class="kw">for</span> neighbour <span class="kw">in</span> graph[node]:
+            <span class="kw">if</span> neighbour <span class="kw">not</span> <span class="kw">in</span> visited:
+                _dfs(neighbour)
+
+    _dfs(start)
+    <span class="kw">return</span> order</code></pre>
+</div>
+
+<div class="code-wrapper">
+  <div class="code-label">Python — BFS <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">bfs</span>(graph: dict, start: <span class="bi">int</span>) -> list[<span class="bi">int</span>]:
+    visited = {start}
+    queue   = deque([start])
+    order   = []
+
+    <span class="kw">while</span> queue:
+        node = queue.popleft()
+        order.append(node)
+        <span class="kw">for</span> neighbour <span class="kw">in</span> graph[node]:
+            <span class="kw">if</span> neighbour <span class="kw">not</span> <span class="kw">in</span> visited:
+                visited.add(neighbour)
+                queue.append(neighbour)
+
+    <span class="kw">return</span> order</code></pre>
+</div>
+
+<!-- PROBLEM 11.1 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 11.1 — Number of Connected Components</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given <code>n</code> nodes labelled 0 to n-1 and a list of undirected edges, count the number of connected components.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use Union-Find (Disjoint Set Union). For each edge, union the two endpoints. Count the number of distinct roots at the end.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python — Union-Find <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">count_components</span>(n: <span class="bi">int</span>, edges: list[list[<span class="bi">int</span>]]) -> <span class="bi">int</span>:
+    parent = <span class="bi">list</span>(<span class="bi">range</span>(n))
+    rank   = [<span class="nu">0</span>] * n
+
+    <span class="kw">def</span> <span class="fn">find</span>(x):
+        <span class="kw">if</span> parent[x] != x:
+            parent[x] = find(parent[x])  <span class="cm"># path compression</span>
+        <span class="kw">return</span> parent[x]
+
+    <span class="kw">def</span> <span class="fn">union</span>(x, y) -> <span class="bi">bool</span>:
+        rx, ry = find(x), find(y)
+        <span class="kw">if</span> rx == ry: <span class="kw">return</span> <span class="kw">False</span>   <span class="cm"># already in same component</span>
+        <span class="kw">if</span> rank[rx] < rank[ry]: rx, ry = ry, rx
+        parent[ry] = rx
+        <span class="kw">if</span> rank[rx] == rank[ry]: rank[rx] += <span class="nu">1</span>
+        <span class="kw">return</span> <span class="kw">True</span>
+
+    components = n
+    <span class="kw">for</span> u, v <span class="kw">in</span> edges:
+        <span class="kw">if</span> union(u, v):
+            components -= <span class="nu">1</span>   <span class="cm"># merged two components</span>
+    <span class="kw">return</span> components</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(n × α(n))</strong> — essentially O(n) with path compression and union-by-rank. α is the inverse Ackermann function, nearly constant. <strong>Space: O(n)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>Union-Find is the go-to structure for dynamic connectivity problems. It answers "are A and B in the same component?" in near-constant time.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 11.2 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 11.2 — Course Schedule (Cycle Detection / Topological Sort)</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>There are <code>numCourses</code> courses (0 to numCourses-1). Given a list of <code>[a, b]</code> prerequisites (must take b before a), determine if it is possible to finish all courses.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>This is cycle detection in a directed graph. If there is a cycle in the prerequisite graph, you can never finish all courses (A requires B requires A). Use DFS with three states: unvisited (0), in-progress (1), done (2). If you revisit a node that is in-progress, you have found a cycle.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">def</span> <span class="fn">can_finish</span>(num_courses: <span class="bi">int</span>, prerequisites: list[list[<span class="bi">int</span>]]) -> <span class="bi">bool</span>:
+    graph = defaultdict(<span class="bi">list</span>)
+    <span class="kw">for</span> a, b <span class="kw">in</span> prerequisites:
+        graph[b].append(a)  <span class="cm"># b must be taken before a</span>
+
+    state = [<span class="nu">0</span>] * num_courses   <span class="cm"># 0=unvisited, 1=in-progress, 2=done</span>
+
+    <span class="kw">def</span> <span class="fn">has_cycle</span>(node) -> <span class="bi">bool</span>:
+        <span class="kw">if</span> state[node] == <span class="nu">1</span>: <span class="kw">return</span> <span class="kw">True</span>   <span class="cm"># back edge → cycle!</span>
+        <span class="kw">if</span> state[node] == <span class="nu">2</span>: <span class="kw">return</span> <span class="kw">False</span>  <span class="cm"># already fully explored</span>
+        state[node] = <span class="nu">1</span>
+        <span class="kw">for</span> nb <span class="kw">in</span> graph[node]:
+            <span class="kw">if</span> has_cycle(nb): <span class="kw">return</span> <span class="kw">True</span>
+        state[node] = <span class="nu">2</span>
+        <span class="kw">return</span> <span class="kw">False</span>
+
+    <span class="kw">return</span> <span class="kw">not</span> <span class="bi">any</span>(has_cycle(c) <span class="kw">for</span> c <span class="kw">in</span> <span class="bi">range</span>(num_courses))</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(V + E)</strong> — DFS visits every vertex and edge once. <strong>Space: O(V + E)</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 11.3 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 11.3 — Clone Graph</span>
+    <span class="badge badge-intermediate">Intermediate</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a reference to a node in an undirected connected graph, return a deep copy (clone) of the graph. Each node has a value and a list of neighbours.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Use a hash map from original node to clone. DFS the original graph. For each node: if we have already cloned it, return the clone. Otherwise, create a clone, add it to the map, then recursively clone all neighbours and add them to the clone's neighbour list.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">class</span> <span class="fn">GraphNode</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, val=<span class="nu">0</span>, neighbours=<span class="kw">None</span>):
+        self.val        = val
+        self.neighbours = neighbours <span class="kw">if</span> neighbours <span class="kw">else</span> []
+
+<span class="kw">def</span> <span class="fn">clone_graph</span>(node: Optional[GraphNode]) -> Optional[GraphNode]:
+    <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> <span class="kw">None</span>
+    cloned = {}   <span class="cm"># original node → cloned node</span>
+
+    <span class="kw">def</span> <span class="fn">dfs</span>(n):
+        <span class="kw">if</span> n <span class="kw">in</span> cloned: <span class="kw">return</span> cloned[n]  <span class="cm"># already cloned</span>
+        copy = GraphNode(n.val)
+        cloned[n] = copy
+        <span class="kw">for</span> nb <span class="kw">in</span> n.neighbours:
+            copy.neighbours.append(dfs(nb))
+        <span class="kw">return</span> copy
+
+    <span class="kw">return</span> dfs(node)</code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(V + E)</strong>. <strong>Space: O(V)</strong> — hash map stores all cloned nodes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM 11.4 -->
+<div class="problem-card">
+  <div class="problem-header">
+    <span class="problem-title">Problem 11.4 — Word Ladder (BFS Shortest Path)</span>
+    <span class="badge badge-advanced">Advanced</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-section">
+      <div class="problem-section-title">Problem Statement</div>
+      <p>Given a <code>beginWord</code>, an <code>endWord</code>, and a <code>wordList</code>, find the length of the shortest transformation sequence from begin to end, where each step changes exactly one letter and every intermediate word must be in the word list.</p>
+      <p><strong>Example:</strong> <code>beginWord="hit"</code>, <code>endWord="cog"</code>, wordList contains valid intermediates → <code>5</code> (hit→hot→dot→dog→cog)</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Intuition</div>
+      <p>Model each word as a graph node. Two words are adjacent if they differ by exactly one letter. Finding the shortest path = BFS from beginWord to endWord. To avoid O(n²) edge checking, for each word generate all possible one-letter variants and look them up in the word set.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Implementation</div>
+<div class="code-wrapper">
+  <div class="code-label">Python <button class="copy-btn">Copy</button></div>
+  <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">ladder_length</span>(beginWord: <span class="bi">str</span>, endWord: <span class="bi">str</span>, wordList: list[<span class="bi">str</span>]) -> <span class="bi">int</span>:
+    word_set = <span class="bi">set</span>(wordList)
+    <span class="kw">if</span> endWord <span class="kw">not</span> <span class="kw">in</span> word_set: <span class="kw">return</span> <span class="nu">0</span>
+
+    queue = deque([(beginWord, <span class="nu">1</span>)])  <span class="cm"># (word, path_length)</span>
+    visited = {beginWord}
+
+    <span class="kw">while</span> queue:
+        word, length = queue.popleft()
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(word)):
+            <span class="kw">for</span> c <span class="kw">in</span> <span class="st">'abcdefghijklmnopqrstuvwxyz'</span>:
+                next_word = word[:i] + c + word[i+<span class="nu">1</span>:]
+                <span class="kw">if</span> next_word == endWord:
+                    <span class="kw">return</span> length + <span class="nu">1</span>
+                <span class="kw">if</span> next_word <span class="kw">in</span> word_set <span class="kw">and</span> next_word <span class="kw">not</span> <span class="kw">in</span> visited:
+                    visited.add(next_word)
+                    queue.append((next_word, length + <span class="nu">1</span>))
+    <span class="kw">return</span> <span class="nu">0</span>  <span class="cm"># no path found</span></code></pre>
+</div>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Complexity Analysis</div>
+      <p><strong>Time: O(M × N × 26)</strong> where M = word length, N = word list size. <strong>Space: O(N)</strong>.</p>
+    </div>
+    <div class="problem-section">
+      <div class="problem-section-title">Key Takeaway</div>
+      <p>BFS always finds the shortest path in an unweighted graph. When the "graph" is implicit (generated on the fly from word mutations), generate neighbours lazily rather than building the full edge list upfront.</p>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-summary">
+  <h3>Chapter Summary</h3>
+  <ul class="checklist">
+    <li>Represent graphs with an <strong>adjacency list</strong> (<code>defaultdict(list)</code>) for sparse graphs.</li>
+    <li><strong>DFS</strong> explores as deep as possible; great for cycle detection and connected components.</li>
+    <li><strong>BFS</strong> explores level by level; always finds the shortest path in unweighted graphs.</li>
+    <li><strong>Union-Find</strong> answers connectivity queries in near-constant time with path compression + union-by-rank.</li>
+    <li>Three-color DFS (0/1/2) detects cycles in directed graphs (back edges = cycles).</li>
+  </ul>
+</div>
+
+<div class="try-section">
+  <button class="try-toggle">▶ Try It Yourself <span class="toggle-icon">›</span></button>
+  <div class="try-content">
+    <div class="try-problem">
+      <strong>Exercise 11.1 (Beginner)</strong>
+      <p>Given a grid, implement a depth-first flood-fill: starting from a given cell, change its colour and all connected cells of the same original colour to a new colour. Use DFS.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 11.2 (Intermediate)</strong>
+      <p>Given a directed acyclic graph (DAG) with V vertices and E edges, return a topological ordering of the vertices using Kahn's algorithm (BFS approach with in-degrees). A topological order is valid if every directed edge u→v has u appearing before v in the output.</p>
+    </div>
+    <div class="try-problem">
+      <strong>Exercise 11.3 (Advanced)</strong>
+      <p>Given a grid where each cell has a height value, implement an algorithm to find all cells from which water can flow to both the Pacific ocean (top-left border) and the Atlantic ocean (bottom-right border). Use BFS/DFS from both ocean borders inward and find their intersection.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .chapter-body -->
+</section>
